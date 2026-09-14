@@ -60,59 +60,85 @@ const BowIcon = ({ className = "w-6 h-6" }) => (
   </svg>
 );
 
-// Sparkle Effect Component (Moving trail that fades out smoothly when cursor stops)
+// Smooth Sparkle Trail & Click Glitter Burst Effect
 const SparkleEffect = () => {
   const [sparkles, setSparkles] = useState([]);
   const requestRef = useRef(null);
-  const lastPos = useRef({ x: 0, y: 0 });
   const isMoving = useRef(false);
   const stopTimeout = useRef(null);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      lastPos.current = { x: e.clientX, y: e.clientY };
       isMoving.current = true;
-
       if (stopTimeout.current) clearTimeout(stopTimeout.current);
 
-      // Add new sparkle trailing behind cursor
-      if (Math.random() > 0.3) {
-        const id = Date.now() + Math.random();
-        const newSparkle = {
-          id,
-          x: e.clientX + (Math.random() * 20 - 10),
-          y: e.clientY + (Math.random() * 20 - 10),
-          size: Math.random() * 10 + 8,
-          color: ['#f472b6', '#fb7185', '#e879f9', '#fbcfe8'][Math.floor(Math.random() * 4)],
-          opacity: 1,
-          rotation: Math.random() * 360,
-        };
-        setSparkles(prev => [...prev.slice(-12), newSparkle]);
-      }
+      if (Math.random() > 0.35) return;
 
-      // If cursor stops for 100ms, mark as not moving so they fade away
+      const id = Math.random();
+      const newSparkle = {
+        id,
+        x: e.clientX + (Math.random() * 16 - 8),
+        y: e.clientY + (Math.random() * 16 - 8),
+        size: Math.random() * 10 + 6,
+        color: ['#f472b6', '#fb7185', '#e879f9', '#fbcfe8', '#fda4af'][Math.floor(Math.random() * 5)],
+        opacity: 1,
+        rotation: Math.random() * 360,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5 - 0.5,
+      };
+
+      setSparkles(prev => [...prev.slice(-20), newSparkle]);
+
       stopTimeout.current = setTimeout(() => {
         isMoving.current = false;
-      }, 100);
+      }, 80);
+    };
+
+    const handleClick = (e) => {
+      // Exploding glitter burst on click
+      const burstCount = 10;
+      const burstParticles = [];
+      for (let i = 0; i < burstCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 4 + 1;
+        burstParticles.push({
+          id: Math.random(),
+          x: e.clientX,
+          y: e.clientY,
+          size: Math.random() * 12 + 8,
+          color: ['#f472b6', '#fb7185', '#e879f9', '#ffffff', '#fbcfe8'][Math.floor(Math.random() * 5)],
+          opacity: 1,
+          rotation: Math.random() * 360,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+        });
+      }
+      setSparkles(prev => [...prev.slice(-15), ...burstParticles]);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('click', handleClick);
 
-    // Animation loop to gradually fade out sparkles when stationary
+    // Smooth physics animation loop for drifting & fading particles
     const animate = () => {
-      if (!isMoving.current) {
-        setSparkles(prev => 
-          prev
-            .map(s => ({ ...s, opacity: s.opacity - 0.08 }))
-            .filter(s => s.opacity > 0)
-        );
-      }
+      setSparkles(prev => 
+        prev
+          .map(s => ({
+            ...s,
+            x: s.x + (s.vx || 0),
+            y: s.y + (s.vy || 0),
+            opacity: s.opacity - (!isMoving.current ? 0.05 : 0.025),
+            rotation: s.rotation + 2
+          }))
+          .filter(s => s.opacity > 0)
+      );
       requestRef.current = requestAnimationFrame(animate);
     };
     requestRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('click', handleClick);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       if (stopTimeout.current) clearTimeout(stopTimeout.current);
     };
@@ -136,7 +162,7 @@ const SparkleEffect = () => {
             opacity: sparkle.opacity,
           }}
         >
-          <Sparkles className="w-full h-full drop-shadow-[0_0_6px_rgba(244,114,182,0.8)]" />
+          <Sparkles className="w-full h-full drop-shadow-[0_0_8px_rgba(244,114,182,0.9)]" />
         </div>
       ))}
     </div>
@@ -357,7 +383,7 @@ STRICT FORMATTING RULES:
   return (
     <div className={`flex h-screen w-full ${theme.bgMain} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
-      {/* Sparkle cursor effect (Moving trail that fades out when stopped) */}
+      {/* Smooth Sparkle Trail & Click Glitter Burst Effect */}
       <SparkleEffect />
 
       {/* Highly Visible Background Bow Watermarks/Decorations */}
