@@ -89,7 +89,6 @@ export default function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  // Dynamic textarea height adjustment
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -229,9 +228,9 @@ export default function App() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="font-bold text-base tracking-wide">AI Assistant</h1>
+                <h1 className="font-bold text-base tracking-wide">AI assistant</h1>
                 <p className={`text-[11px] ${theme.textSecondary} flex items-center gap-1`}>
-                  Powered by <span className="text-cyan-500 font-semibold">Groq API</span>
+                  Made by <span className="text-cyan-400 font-medium">Areesha Riaz</span> • Powered by <span className="text-cyan-500 font-semibold">Groq</span>
                 </p>
               </div>
             </div>
@@ -320,7 +319,7 @@ export default function App() {
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="font-medium">Vercel Edge Ready</span>
+                <span className="font-medium">Vercel API Active</span>
               </div>
               <button
                 onClick={() => setShowSettings(!showSettings)}
@@ -491,7 +490,7 @@ export default function App() {
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-2xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
                 <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
-                <span>Generating response...</span>
+                <span>Generating answer using Groq...</span>
               </div>
             </div>
           )}
