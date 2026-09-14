@@ -53,15 +53,23 @@ const estimateTokens = (text) => {
   return Math.ceil(text.trim().split(/\s+/).length * 1.3);
 };
 
+// Bow SVG Component
+const BowIcon = ({ size = 16, color = "#a855f7" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color} xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 10.5C11.5 8 8 5 5 5C2.5 5 1 7 1 9.5C1 12 3.5 13.5 7 12.5L11 11.5V13.5L8.5 19C8 20 8.5 21 9.5 21C10.5 21 11.5 19.5 12 17.5C12.5 19.5 13.5 21 14.5 21C15.5 21 16 20 15.5 19L13 13.5V11.5L17 12.5C20.5 13.5 23 12 23 9.5C23 7 21.5 5 19 5C16 5 12.5 8 12 10.5Z" />
+    <circle cx="12" cy="11" r="1.5" fill="#ffffff" />
+  </svg>
+);
+
 export default function App() {
   const [selectedModel, setSelectedModel] = useState('qwen/qwen3-32b');
   const [maxTokens, setMaxTokens] = useState(500);
   const [activeMode, setActiveMode] = useState('qa');
-  const [isDarkMode, setIsDarkMode] = useState(true); // Default mode set to Dark Mode
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHistoryVisible, setIsHistoryVisible] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [glitters, setGlitters] = useState([]);
+  const [bows, setBows] = useState([]);
 
   const [sessions, setSessions] = useState(() => {
     const saved = localStorage.getItem('areesha_sessions');
@@ -86,7 +94,6 @@ export default function App() {
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Update browser tab name and favicon
   useEffect(() => {
     document.title = "Nova AI";
     const svgFavicon = `
@@ -107,24 +114,25 @@ export default function App() {
     localStorage.setItem('areesha_sessions', JSON.stringify(sessions));
   }, [sessions]);
 
-  // Click sparkle effect
+  // Click animation spawn bows
   const handleGlobalClick = (e) => {
-    const colors = ['#c084fc', '#a855f7', '#818cf8', '#6366f1', '#ffffff', '#e879f9'];
-    const newGlitters = Array.from({ length: 6 }).map((_, i) => ({
+    const colors = ['#c084fc', '#a855f7', '#e879f9', '#818cf8', '#f472b6'];
+    const newBows = Array.from({ length: 4 }).map((_, i) => ({
       id: Date.now() + i + Math.random(),
       x: e.clientX,
       y: e.clientY,
-      dx: (Math.random() - 0.5) * 60,
-      dy: (Math.random() - 0.5) * 60 - 20,
+      dx: (Math.random() - 0.5) * 80,
+      dy: (Math.random() - 0.5) * 80 - 30,
       color: colors[Math.floor(Math.random() * colors.length)],
-      size: Math.random() * 8 + 4
+      size: Math.random() * 8 + 14,
+      rotation: (Math.random() - 0.5) * 45
     }));
 
-    setGlitters(prev => [...prev, ...newGlitters]);
+    setBows(prev => [...prev, ...newBows]);
 
     setTimeout(() => {
-      setGlitters(prev => prev.filter(g => !newGlitters.includes(g)));
-    }, 600);
+      setBows(prev => prev.filter(b => !newBows.includes(b)));
+    }, 700);
   };
 
   const activeSession = useMemo(() => {
@@ -294,7 +302,6 @@ STRICT FORMATTING RULES:
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  // High-contrast readable light theme using soft purple accents
   const theme = {
     bgMain: isDarkMode ? 'bg-slate-950' : 'bg-slate-50',
     bgSidebar: isDarkMode ? 'bg-slate-900' : 'bg-purple-50/50',
@@ -309,23 +316,21 @@ STRICT FORMATTING RULES:
   return (
     <div onClick={handleGlobalClick} className={`flex h-screen w-full ${theme.bgMain} ${theme.textPrimary} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
-      {/* Click Sparkles Overlay */}
+      {/* Interactive Floating Bows Overlay */}
       <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-        {glitters.map(g => (
+        {bows.map(b => (
           <div
-            key={g.id}
-            className="absolute rounded-full animate-ping"
+            key={b.id}
+            className="absolute transition-all duration-700 ease-out"
             style={{
-              left: `${g.x}px`,
-              top: `${g.y}px`,
-              width: `${g.size}px`,
-              height: `${g.size}px`,
-              backgroundColor: g.color,
-              transform: `translate(${g.dx}px, ${g.dy}px)`,
-              transition: 'transform 0.6s ease-out, opacity 0.6s ease-out',
-              opacity: 0.8
+              left: `${b.x}px`,
+              top: `${b.y}px`,
+              transform: `translate(${b.dx}px, ${b.dy}px) rotate(${b.rotation}deg)`,
+              opacity: 0.85
             }}
-          />
+          >
+            <BowIcon size={b.size} color={b.color} />
+          </div>
         ))}
       </div>
 
@@ -340,9 +345,9 @@ STRICT FORMATTING RULES:
           <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-gradient-to-tr from-purple-500 to-indigo-500 rounded-2xl shadow-md shadow-purple-500/20">
-                <Sparkles className="w-5 h-5 text-white" />
+                <BowIcon size={20} color="#ffffff" />
               </div>
-              <h1 className="font-bold text-base tracking-wide text-purple-600 dark:text-purple-400">
+              <h1 className="font-bold text-base tracking-wide text-purple-600 dark:text-purple-400 flex items-center gap-1.5">
                 Nova AI
               </h1>
             </div>
@@ -409,7 +414,7 @@ STRICT FORMATTING RULES:
             </button>
           </div>
 
-          {/* Collapsible History Section */}
+          {/* History */}
           <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1">
             <div className="flex items-center justify-between mb-2 px-1">
               <button 
@@ -510,7 +515,7 @@ STRICT FORMATTING RULES:
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-4">
               <div className={`p-5 ${theme.bgCard} border ${theme.border} rounded-3xl shadow-lg`}>
-                <Bot className="w-10 h-10 text-purple-500" />
+                <BowIcon size={36} color="#a855f7" />
               </div>
               <div>
                 <h3 className="text-lg font-bold text-purple-950 dark:text-slate-100">
@@ -548,7 +553,7 @@ STRICT FORMATTING RULES:
                 }`}>
                   {msg.role === 'assistant' && (
                     <div className={`flex items-center justify-between border-b ${theme.border} pb-2 mb-2 text-xs ${theme.textSecondary}`}>
-                      <span className="font-mono text-[11px] text-purple-600 dark:text-purple-400 font-semibold">
+                      <span className="font-mono text-[11px] text-purple-600 dark:text-purple-400 font-semibold flex items-center gap-1">
                         Nova
                       </span>
                       <button onClick={() => copyToClipboard(msg.content, index)} className="p-1 hover:opacity-80">
@@ -585,7 +590,6 @@ STRICT FORMATTING RULES:
             </div>
           )}
 
-          {/* Banner positioned directly above the input section */}
           <div className="max-w-3xl mx-auto pt-4 flex items-center justify-between">
             <span className="text-xs font-semibold flex items-center gap-1.5">
               Made by <span className="text-purple-600 dark:text-purple-400 font-bold">Areesha Riaz</span>
