@@ -61,7 +61,7 @@ const MODE_RULES = {
 
   qa: `MODE-SPECIFIC INSTRUCTIONS FOR Q&A ASSISTANT:
 1. You are a Q&A Assistant.
-2. Answer directly and stay strictly to the point. No fluff or extra commentary.`
+2. Answer directly, stay strictly to the point, and write NO MORE THAN 2 LINES total in your response.`
 };
 
 const estimateTokens = (text) => {
