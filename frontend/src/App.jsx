@@ -413,7 +413,7 @@ STRICT FORMATTING RULES:
               <h1 className="font-bold text-base tracking-wide bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">Nova AI</h1>
             </div>
             <div className="flex items-center space-x-1">
-              <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="New Chat">
+              <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="New Whimsy Journey">
                 <Plus className="w-5 h-5" />
               </button>
               <button onClick={() => setIsMobileMenuOpen(false)} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} md:hidden`}>
@@ -424,7 +424,7 @@ STRICT FORMATTING RULES:
 
           <div className={`p-4 border-b ${theme.border}`}>
             <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} mb-2 block`}>
-              Assistant Mode
+              Mission Control Mode
             </label>
             <div className="grid grid-cols-2 gap-2">
               {MODES.map(mode => {
@@ -459,7 +459,7 @@ STRICT FORMATTING RULES:
 
           {/* Active Chat Tab */}
           <div className="p-4 pb-2 space-y-2">
-            <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} block`}>Current Chat</label>
+            <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} block`}>Current Whimsy Journey</label>
             <div className={`flex items-center justify-between p-2.5 rounded-xl border ${theme.border} ${theme.bgCard} font-medium text-xs shadow-sm`}>
               <div className="flex items-center space-x-2 truncate">
                 <MessageSquare className="w-4 h-4 shrink-0 text-pink-400" />
@@ -471,7 +471,7 @@ STRICT FORMATTING RULES:
               className={`w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border border-dashed ${theme.border} hover:border-pink-400 ${theme.textSecondary} text-xs font-semibold transition-all`}
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>+ Start New Chat</span>
+              <span>+ Start New Whimsy Journey</span>
             </button>
           </div>
 
@@ -494,7 +494,7 @@ STRICT FORMATTING RULES:
             {isHistoryVisible && (
               <div className="space-y-1">
                 {historicalSessions.length === 0 ? (
-                  <p className={`text-xs p-2 ${theme.textSecondary} italic`}>No past chats yet</p>
+                  <p className={`text-xs p-2 ${theme.textSecondary} italic`}>No past whimsy journeys yet</p>
                 ) : (
                   historicalSessions.map(s => (
                     <div
@@ -581,8 +581,8 @@ STRICT FORMATTING RULES:
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">How can Nova help you today?</h3>
-                <p className={`text-sm ${theme.textSecondary} mt-1`}>Select a prompt below or type your message to get started.</p>
+                <h3 className="text-lg font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">What shall we manifest today?</h3>
+                <p className={`text-sm ${theme.textSecondary} mt-1`}>Pick a potion below or cast a spell to get started.</p>
               </div>
               <div className="w-full space-y-2 pt-4">
                 {MODE_PROMPTS[activeMode]?.map((prompt, idx) => (
@@ -644,7 +644,7 @@ STRICT FORMATTING RULES:
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
                 <span className="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
-                <span>Sparkle ur thoughts here...</span>
+                <span>Sparkle your thoughts here...</span>
               </div>
             </div>
           )}
@@ -687,7 +687,7 @@ STRICT FORMATTING RULES:
                     handleSendMessage();
                   }
                 }}
-                placeholder="Sparkle ur thoughts here..."
+                placeholder="Sparkle your thoughts here..."
                 rows={1}
                 className={`flex-1 bg-transparent px-2 py-1.5 text-sm ${theme.textPrimary} placeholder-pink-300/40 focus:outline-none resize-none overflow-y-auto max-h-32`}
               />
@@ -705,8 +705,8 @@ STRICT FORMATTING RULES:
               </button>
             </div>
             
-            <div className="flex items-center justify-between px-2 text-[11px]">
-              <span className={theme.textSecondary}>Enter to send, Shift+Enter for newline</span>
+            <div className="flex items-center justify-between px-2 text-[13px]">
+              <span className={theme.textSecondary}>Enter to cast spell, Shift+Enter to keep sharing</span>
               <span className="font-semibold flex items-center gap-1">
                 Made by <span className="font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">Areesha Riaz</span>
               </span>
