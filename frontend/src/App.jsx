@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { 
   MessageSquare, FileText, Calculator, Lightbulb, Settings, Trash2, Send, 
   Bot, User, Copy, Check, Cpu, ChevronRight, ChevronDown, Plus, RefreshCw, Zap, Sparkles, Sun, Moon,
-  Menu, X, History
+  Menu, X, History, Paperclip, Image as ImageIcon
 } from 'lucide-react';
 
 const MODES = [
@@ -13,10 +13,10 @@ const MODES = [
 ];
 
 const GROQ_MODELS = [
-  { id: 'qwen/qwen3-32b', name: 'Qwen 3 32B' },
+  { id: 'qwen/qwen3-32b', name: 'Qwen 3 32B (Default)' },
+  { id: 'llama-3.2-11b-vision-preview', name: 'Llama 3.2 11B Vision' },
   { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B Instant' },
-  { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile' },
-  { id: 'openai/gpt-oss-20b', name: 'GPT-OSS 20B' }
+  { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile' }
 ];
 
 const MODE_PROMPTS = {
@@ -77,7 +77,10 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHistoryVisible, setIsHistoryVisible] = useState(true);
 
-  // Load saved chat sessions directly from localStorage on load (0 tokens used on reload)
+  // Image attachment state
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // Load saved chat sessions directly from localStorage (0 tokens used on reload)
   const [sessions, setSessions] = useState(() => {
     const saved = localStorage.getItem('areesha_sessions');
     if (saved) {
@@ -99,6 +102,7 @@ export default function App() {
 
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   // Sync sessions state to localStorage
   useEffect(() => {
@@ -125,6 +129,23 @@ export default function App() {
       textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 128)}px`;
     }
   }, [inputMessage]);
+
+  // Handle Image Upload -> Base64
+  const handleImageSelect = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload a valid image file.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Creates a brand new separate tab in history
   const createNewSession = useCallback((mode = activeMode) => {
@@ -158,21 +179,29 @@ export default function App() {
 
   const handleSendMessage = async (textToSend = inputMessage) => {
     const text = textToSend.trim();
-    if (!text || isLoading) return;
+    if ((!text && !selectedImage) || isLoading) return;
 
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const userMessage = { role: 'user', content: text, timestamp };
+    const userMessage = { 
+      role: 'user', 
+      content: text, 
+      image: selectedImage, 
+      timestamp 
+    };
 
-    // Keeps all queries within the SAME active session tab
+    // Keep query within the SAME active session tab
     setSessions(prev => prev.map(s => {
       if (s.id === activeSessionId) {
-        const title = s.messages.length === 0 ? (text.length > 25 ? text.substring(0, 25) + '...' : text) : s.title;
+        const titleText = text || 'Image Query';
+        const title = s.messages.length === 0 ? (titleText.length > 25 ? titleText.substring(0, 25) + '...' : titleText) : s.title;
         return { ...s, title, messages: [...s.messages, userMessage] };
       }
       return s;
     }));
 
+    const currentImage = selectedImage;
     setInputMessage('');
+    setSelectedImage(null);
     setIsLoading(true);
 
     try {
@@ -182,23 +211,33 @@ ${MODE_RULES[activeMode] || ''}
 
 STRICT FORMATTING RULES:
 1. NEVER use LaTeX formatting under any circumstances (do NOT use $, $$, \\begin, \\end, \\frac, \\sum, or any LaTeX symbols).
-2. Write all math and technical expressions in plain, standard text or simple Unicode (e.g., use "2x + 5 = 15", "f'(x) = 6x + 4", "3x^2").
+2. Write all math and technical expressions in plain, standard text or simple Unicode.
 3. DO NOT use asterisks (*) for emphasis, bolding, or lists.
 4. DO NOT use horizontal lines, dividers, or dashes (---, ___).
 5. Output pure, clean plain text with standard line breaks for paragraphs.`;
 
+      // Format messages history for backend API request
       const historyForApi = [
         { role: 'system', content: systemPrompt },
-        ...messages.map(m => ({ role: m.role, content: m.content })),
-        { role: 'user', content: text }
+        ...messages.map(m => ({
+          role: m.role,
+          content: m.content,
+          image: m.image || null
+        })),
+        { role: 'user', content: text, image: currentImage }
       ];
+
+      // Auto-select vision model if an image is present and current model doesn't support vision
+      const effectiveModel = currentImage && selectedModel === 'qwen/qwen3-32b' 
+        ? 'llama-3.2-11b-vision-preview' 
+        : selectedModel;
 
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           mode: activeMode,
-          model: selectedModel,
+          model: effectiveModel,
           messages: historyForApi,
           max_tokens: Number(maxTokens)
         })
@@ -344,7 +383,7 @@ STRICT FORMATTING RULES:
             </div>
           </div>
 
-          {/* New Chat Trigger Button above History */}
+          {/* Start New Chat Trigger */}
           <div className="p-4 pb-2">
             <button
               onClick={() => createNewSession()}
@@ -371,7 +410,7 @@ STRICT FORMATTING RULES:
               </span>
             </div>
 
-            {/* Collapsible History Tabs */}
+            {/* Collapsible History List */}
             {isHistoryVisible && (
               <div className="space-y-1">
                 {sessions.map(s => (
@@ -429,7 +468,7 @@ STRICT FORMATTING RULES:
         </div>
       </aside>
 
-      {/* Main Chat Container */}
+      {/* Main Container */}
       <main className="flex-1 flex flex-col h-full relative overflow-hidden">
         <header className={`h-16 border-b ${theme.border} ${theme.bgHeader} backdrop-blur px-4 md:px-6 flex items-center justify-between z-10`}>
           <div className="flex items-center space-x-3">
@@ -481,28 +520,40 @@ STRICT FORMATTING RULES:
         {/* Chat Feed */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-4">
-              <div className={`p-4 ${theme.bgCard} border ${theme.border} rounded-2xl shadow-xl`}>
-                <Bot className="w-10 h-10 text-cyan-500" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold">How can I help you today?</h3>
-                <p className={`text-sm ${theme.textSecondary} mt-1`}>
-                  Select a prompt below or type your message to get started.
-                </p>
+            <div className="h-full flex flex-col items-center justify-between py-4 max-w-lg mx-auto relative">
+              <div />
+
+              {/* Center Welcome Box */}
+              <div className="flex flex-col items-center text-center space-y-4 w-full">
+                <div className={`p-4 ${theme.bgCard} border ${theme.border} rounded-2xl shadow-xl`}>
+                  <Bot className="w-10 h-10 text-cyan-500" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">How can I help you today?</h3>
+                  <p className={`text-sm ${theme.textSecondary} mt-1`}>
+                    Select a prompt below or type your message to get started.
+                  </p>
+                </div>
+
+                <div className="w-full space-y-2 pt-4">
+                  {MODE_PROMPTS[activeMode]?.map((prompt, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleSendMessage(prompt)}
+                      className={`w-full text-left p-3 rounded-xl ${theme.bgCard} border ${theme.border} text-xs transition-all flex items-center justify-between group hover:border-cyan-500/50`}
+                    >
+                      <span>"{prompt}"</span>
+                      <ChevronRight className="w-4 h-4 text-cyan-500" />
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="w-full space-y-2 pt-4">
-                {MODE_PROMPTS[activeMode]?.map((prompt, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleSendMessage(prompt)}
-                    className={`w-full text-left p-3 rounded-xl ${theme.bgCard} border ${theme.border} text-xs transition-all flex items-center justify-between group hover:border-cyan-500/50`}
-                  >
-                    <span>"{prompt}"</span>
-                    <ChevronRight className="w-4 h-4 text-cyan-500" />
-                  </button>
-                ))}
+              {/* Attribution Tag Placed Exactly in the Bottom Right of the Main Area */}
+              <div className="w-full flex justify-end pt-4">
+                <span className={`text-xs font-medium ${theme.textSecondary}`}>
+                  Made by <span className="text-cyan-400 font-semibold">Areesha Riaz</span> • Powered by <span className="text-cyan-500 font-semibold">Groq</span>
+                </span>
               </div>
             </div>
           ) : (
@@ -545,6 +596,13 @@ STRICT FORMATTING RULES:
                     </div>
                   )}
 
+                  {/* Render Image if user attached one */}
+                  {msg.image && (
+                    <div className="mb-3 overflow-hidden rounded-xl border border-white/20">
+                      <img src={msg.image} alt="User attachment" className="max-h-60 w-auto object-cover" />
+                    </div>
+                  )}
+
                   <div className="whitespace-pre-wrap font-sans text-sm">
                     {msg.content}
                   </div>
@@ -583,16 +641,47 @@ STRICT FORMATTING RULES:
         <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur`}>
           <div className="max-w-3xl mx-auto space-y-2">
             
-            <div className="flex items-center justify-between px-1">
-              <span className={`text-[11px] font-medium ${theme.textSecondary} flex items-center gap-1`}>
-                Made by <span className="text-cyan-400 font-semibold">Areesha Riaz</span> • Powered by <span className="text-cyan-500 font-semibold">Groq</span>
-              </span>
-              <span className={`text-[11px] ${theme.textSecondary} hidden sm:inline`}>
+            <div className="flex items-center justify-end px-1">
+              <span className={`text-[11px] ${theme.textSecondary}`}>
                 Enter to send, Shift+Enter for newline
               </span>
             </div>
 
+            {/* Hidden Image Input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleImageSelect}
+              className="hidden"
+            />
+
+            {/* Attached Image Preview */}
+            {selectedImage && (
+              <div className="relative inline-block mb-1">
+                <img src={selectedImage} alt="Attachment preview" className="w-16 h-16 object-cover rounded-xl border-2 border-cyan-500 shadow-md" />
+                <button
+                  onClick={() => setSelectedImage(null)}
+                  className="absolute -top-2 -right-2 bg-rose-500 hover:bg-rose-600 text-white rounded-full p-1 text-xs shadow-md transition-colors"
+                  title="Remove image"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+
             <div className={`relative flex items-center ${theme.bgInput} border ${theme.border} focus-within:border-cyan-500 rounded-2xl p-2 transition-all shadow-lg`}>
+              
+              {/* Paperclip Button */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className={`p-2 rounded-xl text-slate-400 hover:text-cyan-400 hover:${theme.bgCard} transition-colors`}
+                title="Attach Image"
+              >
+                <Paperclip className="w-4 h-4" />
+              </button>
+
               <textarea
                 ref={textareaRef}
                 value={inputMessage}
@@ -605,13 +694,14 @@ STRICT FORMATTING RULES:
                 }}
                 placeholder={`Ask ${MODES.find(m => m.id === activeMode)?.name}...`}
                 rows={1}
-                className={`flex-1 bg-transparent px-3 py-1.5 text-sm ${theme.textPrimary} placeholder-slate-400 focus:outline-none resize-none overflow-y-auto max-h-32`}
+                className={`flex-1 bg-transparent px-2 py-1.5 text-sm ${theme.textPrimary} placeholder-slate-400 focus:outline-none resize-none overflow-y-auto max-h-32`}
               />
+
               <button
                 onClick={() => handleSendMessage()}
-                disabled={!inputMessage.trim() || isLoading}
+                disabled={(!inputMessage.trim() && !selectedImage) || isLoading}
                 className={`p-2.5 rounded-xl transition-all ${
-                  inputMessage.trim() && !isLoading
+                  (inputMessage.trim() || selectedImage) && !isLoading
                     ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md hover:opacity-90'
                     : `${theme.bgCard} ${theme.textSecondary} cursor-not-allowed`
                 }`}
