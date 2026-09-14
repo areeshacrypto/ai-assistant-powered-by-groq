@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import { 
   MessageSquare, FileText, Calculator, Lightbulb, Settings, Trash2, Send, 
   Bot, User, Copy, Check, Cpu, ChevronRight, Plus, RefreshCw, Zap, Sparkles, Sun, Moon 
@@ -130,14 +132,14 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const systemPrompt = `You are a helpful CLI AI assistant operating in "${activeMode}" mode. Provide clear, concise responses using structured markdown tables where appropriate. Whenever you create a table, you MUST include a standard header separator row (e.g., |---|---|) right beneath the column titles so it renders properly as a UI grid instead of raw text pipes. Avoid raw unformatted LaTeX text.`;
+      const systemPrompt = `You are a helpful CLI AI assistant operating in "${activeMode}" mode. Provide clear, concise responses using structured markdown tables where appropriate. Whenever you create a table, you MUST include a standard header separator row (e.g., |---|---|) right beneath the column titles so it renders properly as a UI grid instead of raw text pipes. For math expressions, ALWAYS use standard LaTeX math delimiters: use double dollar signs ($$ ... $$) for block/display equations and single dollar signs ($ ... $) for inline math. Do NOT use brackets like \\[ \\] or \\( \\).`;
+      
       const historyForApi = [
         { role: 'system', content: systemPrompt },
         ...messages.map(m => ({ role: m.role, content: m.content })),
         { role: 'user', content: text }
       ];
 
-      // Relative fetch URL works both locally and on Vercel deployments
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
@@ -218,9 +220,9 @@ export default function App() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="font-bold text-base tracking-wide">Areesha's AI assistant</h1>
-                <p className={`text-xs ${theme.textSecondary} flex items-center gap-1`}>
-                  Powered by <span className="text-cyan-500 font-semibold">Groq</span>
+                <h1 className="font-bold text-base tracking-wide">AI assistant</h1>
+                <p className={`text-[11px] ${theme.textSecondary} flex items-center gap-1`}>
+                  Made by <span className="text-cyan-400 font-medium">Areesha Riaz</span> • Powered by <span className="text-cyan-500 font-semibold">Groq</span>
                 </p>
               </div>
             </div>
@@ -434,7 +436,6 @@ export default function App() {
                     </div>
                   )}
 
-                  {/* Markdown Renderer with Clean UI Tables and Divider Rules */}
                   <div className={`font-sans text-sm space-y-3 
                     [&_h1]:text-lg [&_h1]:font-bold 
                     [&_h2]:text-base [&_h2]:font-bold 
@@ -447,7 +448,12 @@ export default function App() {
                     [&_td]:border [&_td]:border-slate-700/60 [&_td]:p-2`}
                   >
                     {msg.role === 'assistant' && !msg.isError ? (
-                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      <ReactMarkdown 
+                        remarkPlugins={[remarkMath]} 
+                        rehypePlugins={[rehypeKatex]}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
                     ) : (
                       <div className="whitespace-pre-wrap">{msg.content}</div>
                     )}
