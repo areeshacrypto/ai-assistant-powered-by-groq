@@ -60,13 +60,17 @@ const BowIcon = ({ className = "w-6 h-6" }) => (
   </svg>
 );
 
-// Sparkle Effect Component
+// Sparkle Effect Component (Only active during movement, clears instantly on stop)
 const SparkleEffect = () => {
   const [sparkles, setSparkles] = useState([]);
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      if (Math.random() > 0.3) return;
+      // Clear previous timeout tracking stop status
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+      if (Math.random() > 0.25) return;
       
       const id = Date.now() + Math.random();
       const newSparkle = {
@@ -78,19 +82,29 @@ const SparkleEffect = () => {
         rotation: Math.random() * 360,
       };
 
-      setSparkles(prev => [...prev.slice(-15), newSparkle]);
+      setSparkles(prev => [...prev.slice(-10), newSparkle]);
+
+      // When mouse stops moving for 80ms, clear out all sparkles immediately
+      timeoutRef.current = setTimeout(() => {
+        setSparkles([]);
+      }, 80);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, []);
+
+  if (sparkles.length === 0) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
       {sparkles.map(sparkle => (
         <div
           key={sparkle.id}
-          className="absolute animate-ping duration-700 pointer-events-none"
+          className="absolute pointer-events-none transition-opacity duration-75"
           style={{
             left: `${sparkle.x}px`,
             top: `${sparkle.y}px`,
@@ -321,7 +335,7 @@ STRICT FORMATTING RULES:
   return (
     <div className={`flex h-screen w-full ${theme.bgMain} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
-      {/* Sparkle cursor effect */}
+      {/* Sparkle cursor effect (Only shows on movement) */}
       <SparkleEffect />
 
       {/* Highly Visible Background Bow Watermarks/Decorations */}
@@ -587,19 +601,10 @@ STRICT FORMATTING RULES:
             </div>
           )}
 
-          <div className="max-w-3xl mx-auto pt-4 flex items-center justify-between">
-            <span className="text-xs font-semibold flex items-center gap-1">
-              Made by <span className="font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">Areesha Riaz</span>
-            </span>
-            <span className={`text-xs font-medium ${theme.textSecondary}`}>
-              Powered by Groq
-            </span>
-          </div>
-
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar */}
+        {/* Input Bar with "Made by Areesha Riaz" cleanly positioned under the text box */}
         <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur`}>
           <div className="max-w-3xl mx-auto space-y-2">
             
@@ -654,6 +659,9 @@ STRICT FORMATTING RULES:
             
             <div className="flex items-center justify-between px-2 text-[11px]">
               <span className={theme.textSecondary}>Enter to send, Shift+Enter for newline</span>
+              <span className="font-semibold flex items-center gap-1">
+                Made by <span className="font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">Areesha Riaz</span>
+              </span>
             </div>
           </div>
         </div>
