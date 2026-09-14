@@ -71,6 +71,7 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHistoryVisible, setIsHistoryVisible] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [glitters, setGlitters] = useState([]);
 
   const [sessions, setSessions] = useState(() => {
     const saved = localStorage.getItem('areesha_sessions');
@@ -98,6 +99,26 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('areesha_sessions', JSON.stringify(sessions));
   }, [sessions]);
+
+  // Handle click glitter animation
+  const handleGlobalClick = (e) => {
+    const colors = ['#f472b6', '#fb7185', '#f43f5e', '#e879f9', '#ffffff', '#fbbf24'];
+    const newGlitters = Array.from({ length: 6 }).map((_, i) => ({
+      id: Date.now() + i + Math.random(),
+      x: e.clientX,
+      y: e.clientY,
+      dx: (Math.random() - 0.5) * 60,
+      dy: (Math.random() - 0.5) * 60 - 20,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: Math.random() * 8 + 4
+    }));
+
+    setGlitters(prev => [...prev, ...newGlitters]);
+
+    setTimeout(() => {
+      setGlitters(prev => prev.filter(g => !newGlitters.includes(g)));
+    }, 600);
+  };
 
   const activeSession = useMemo(() => {
     return sessions.find(s => s.id === activeSessionId) || sessions[0] || { id: Date.now(), title: 'New Chat', mode: 'qa', messages: [] };
@@ -190,7 +211,7 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const systemPrompt = `You are Nova, a helpful AI assistant operating in "${activeMode}" mode.
+      const systemPrompt = `You are Poodle, a helpful AI assistant operating in "${activeMode}" mode.
 
 ${MODE_RULES[activeMode] || ''}
 
@@ -267,21 +288,41 @@ STRICT FORMATTING RULES:
   };
 
   const theme = {
-    bgMain: isDarkMode ? 'bg-slate-950' : 'bg-pink-50/60',
-    bgSidebar: isDarkMode ? 'bg-slate-900' : 'bg-pink-100/40',
-    bgHeader: isDarkMode ? 'bg-slate-900/40' : 'bg-white/70',
-    border: isDarkMode ? 'border-slate-800' : 'border-pink-200/60',
-    textPrimary: isDarkMode ? 'text-slate-100' : 'text-slate-800',
-    textSecondary: isDarkMode ? 'text-pink-400' : 'text-pink-400',
+    bgMain: isDarkMode ? 'bg-slate-950' : 'bg-pink-50/40',
+    bgSidebar: isDarkMode ? 'bg-slate-900' : 'bg-pink-100/30',
+    bgHeader: isDarkMode ? 'bg-slate-900/40' : 'bg-white/60',
+    border: isDarkMode ? 'border-slate-800' : 'border-pink-200/50',
+    textPrimary: isDarkMode ? 'text-slate-100' : 'text-pink-950/80',
+    textSecondary: isDarkMode ? 'text-pink-400' : 'text-pink-900/70',
     bgCard: isDarkMode ? 'bg-slate-900' : 'bg-white/80',
     bgInput: isDarkMode ? 'bg-slate-950' : 'bg-white',
   };
 
   return (
-    <div className={`flex h-screen w-full ${theme.bgMain} ${theme.textPrimary} font-sans antialiased overflow-hidden transition-colors duration-200`}>
+    <div onClick={handleGlobalClick} className={`flex h-screen w-full ${theme.bgMain} ${theme.textPrimary} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
+      {/* Click Sparkles Overlay */}
+      <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+        {glitters.map(g => (
+          <div
+            key={g.id}
+            className="absolute rounded-full animate-ping"
+            style={{
+              left: `${g.x}px`,
+              top: `${g.y}px`,
+              width: `${g.size}px`,
+              height: `${g.size}px`,
+              backgroundColor: g.color,
+              transform: `translate(${g.dx}px, ${g.dy}px)`,
+              transition: 'transform 0.6s ease-out, opacity 0.6s ease-out',
+              opacity: 0.8
+            }}
+          />
+        ))}
+      </div>
+
       {isMobileMenuOpen && (
-        <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-pink-950/30 backdrop-blur-sm z-30 md:hidden" />
+        <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-pink-950/20 backdrop-blur-sm z-30 md:hidden" />
       )}
 
       {/* Sidebar */}
@@ -295,7 +336,7 @@ STRICT FORMATTING RULES:
                 <BowIcon className="w-3.5 h-3.5 text-rose-500 absolute -top-1.5 -right-1.5 drop-shadow-sm" />
               </div>
               <h1 className="font-bold text-base tracking-wide text-rose-500 flex items-center gap-1.5">
-                Nova AI <BowIcon className="w-4 h-4 text-pink-400" />
+                Poodle AI <BowIcon className="w-4 h-4 text-pink-400" />
               </h1>
             </div>
             <div className="flex items-center space-x-1">
@@ -309,7 +350,7 @@ STRICT FORMATTING RULES:
           </div>
 
           <div className={`p-4 border-b ${theme.border}`}>
-            <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} mb-2 block flex items-center justify-between`}>
+            <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} mb-2 flex items-center justify-between`}>
               <span>Assistant Mode</span>
               <BowIcon className="w-3.5 h-3.5 text-pink-300" />
             </label>
@@ -330,7 +371,7 @@ STRICT FORMATTING RULES:
                     }}
                     className={`flex flex-col items-start p-2.5 rounded-2xl text-left transition-all border ${
                       isActive
-                        ? isDarkMode ? 'bg-slate-800 border-pink-400 text-white shadow-md' : 'bg-white border-rose-300 text-slate-800 shadow-md shadow-pink-100/50'
+                        ? isDarkMode ? 'bg-slate-800 border-pink-400 text-white shadow-md' : 'bg-white border-rose-300 text-pink-950 shadow-md shadow-pink-100/50'
                         : `${theme.bgCard} ${theme.border} ${theme.textSecondary}`
                     }`}
                   >
@@ -416,7 +457,7 @@ STRICT FORMATTING RULES:
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
                 <span className="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
-                <span className="font-medium text-pink-500">Nova Active</span>
+                <span className="font-medium text-pink-500">Poodle Active</span>
               </div>
               <button onClick={() => { setShowSettings(!showSettings); setIsMobileMenuOpen(false); }} className={`p-1.5 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="Settings">
                 <Settings className="w-4 h-4" />
@@ -438,7 +479,7 @@ STRICT FORMATTING RULES:
             </div>
             <div>
               <h2 className="text-sm font-semibold flex items-center gap-1">
-                Nova ({MODES.find(m => m.id === activeMode)?.name})
+                Poodle ({MODES.find(m => m.id === activeMode)?.name})
               </h2>
               <p className={`text-xs ${theme.textSecondary} hidden sm:block`}>Model: <span className="font-mono">{selectedModel}</span></p>
             </div>
@@ -469,7 +510,7 @@ STRICT FORMATTING RULES:
               </div>
               <div>
                 <h3 className="text-lg font-semibold flex items-center justify-center gap-1.5">
-                  How can Nova help you today? <BowIcon className="w-4 h-4 text-rose-400" />
+                  How can Poodle help you today? <BowIcon className="w-4 h-4 text-rose-400" />
                 </h3>
                 <p className={`text-sm ${theme.textSecondary} mt-1`}>Select a prompt below or type your message to get started.</p>
               </div>
@@ -504,7 +545,7 @@ STRICT FORMATTING RULES:
                   {msg.role === 'assistant' && (
                     <div className={`flex items-center justify-between border-b ${theme.border} pb-2 mb-2 text-xs ${theme.textSecondary}`}>
                       <span className="font-mono text-[11px] text-pink-400 flex items-center gap-1">
-                        Nova <BowIcon className="w-3 h-3 text-pink-300" />
+                        Poodle <BowIcon className="w-3 h-3 text-pink-300" />
                       </span>
                       <button onClick={() => copyToClipboard(msg.content, index)} className="p-1 hover:opacity-80">
                         {copiedIndex === index ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
@@ -535,16 +576,16 @@ STRICT FORMATTING RULES:
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-2xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
                 <span className="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
-                <span>Nova is thinking...</span>
+                <span>Poodle is thinking...</span>
               </div>
             </div>
           )}
 
           {/* Banner positioned directly above the input section */}
           <div className="max-w-3xl mx-auto pt-4 flex items-center justify-between">
-            <span className="text-sm font-semibold flex items-center gap-1.5">
+            <span className="text-xs font-semibold flex items-center gap-1.5">
               Made by <span className="text-rose-400 font-bold">Areesha Riaz</span>
-              <BowIcon className="w-4 h-4 text-pink-400" />
+              <BowIcon className="w-3.5 h-3.5 text-pink-400" />
             </span>
             <span className={`text-xs font-medium ${theme.textSecondary} flex items-center gap-1`}>
               Powered by <span className="text-pink-500 font-semibold">Groq</span>
@@ -589,7 +630,7 @@ STRICT FORMATTING RULES:
                     handleSendMessage();
                   }
                 }}
-                placeholder={`Ask Nova...`}
+                placeholder={`Ask Poodle...`}
                 rows={1}
                 className={`flex-1 bg-transparent px-2 py-1.5 text-sm ${theme.textPrimary} placeholder-pink-300 focus:outline-none resize-none overflow-y-auto max-h-32`}
               />
@@ -623,7 +664,7 @@ STRICT FORMATTING RULES:
                 <div className="flex items-center space-x-2">
                   <Settings className="w-5 h-5 text-pink-400" />
                   <h3 className="font-semibold flex items-center gap-1.5">
-                    Nova Settings <BowIcon className="w-4 h-4 text-pink-300" />
+                    Poodle Settings <BowIcon className="w-4 h-4 text-pink-300" />
                   </h3>
                 </div>
                 <button onClick={() => setShowSettings(false)} className={`${theme.textSecondary} hover:${theme.textPrimary}`}>✕</button>
