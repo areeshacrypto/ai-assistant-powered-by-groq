@@ -69,7 +69,9 @@ async def chat(request_data: ChatRequest):
                 messages=groq_messages,
                 max_tokens=request_data.max_tokens
             )
-            answer = completion.choices.message.content
+            
+            # FIXED: Access index 0 of choices list
+            answer = completion.choices[0].message.content
             return {"response": answer, "used_model": model_id}
         
         except Exception as e:
