@@ -1,10 +1,26 @@
+# Secret & Environment Variables
 .env
+*.env
+
+# Dependencies
+node_modules/
+frontend/node_modules/
+
+# Python Caches & Environments
 __pycache__/
-
-.pytest_cache/
-
 *.pyc
+.pytest_cache/
+venv/
+env/
 
+# Build Outputs
+dist/
+dist-ssr/
+frontend/dist/
+frontend/dist-ssr/
 
+# IDE & OS Files
+.vscode/
+.DS_Store
 logs/*.json
 !logs/.gitkeep
