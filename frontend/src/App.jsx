@@ -33,13 +33,35 @@ const MODE_PROMPTS = {
   math: [
     "Solve 2x + 5 = 15 step by step",
     "Calculate the derivative of f(x) = 3x^2 + 4x - 5",
-    "Explain Bayes' Theorem with a quick example"
+    "Explain Bayes' Theorem with a quick numerical example"
   ],
   explain: [
     "Explain API rate limits like I am 10 years old",
     "How does Docker containerization work under the hood?",
     "What is the difference between synchronous and asynchronous code?"
   ]
+};
+
+const MODE_RULES = {
+  math: `MODE-SPECIFIC INSTRUCTION:
+1. You are strictly a Math Solver.
+2. If the user's query is NOT a mathematical problem, equation, calculation, or math-related question, respond ONLY with:
+   "Use [appropriate mode name] for this question." 
+   (For example: "Use Q&A Assistant for this question" or "Use Concept Explainer for this question").
+3. For valid math queries, provide step-by-step mathematical reasoning.`,
+
+  summarize: `MODE-SPECIFIC INSTRUCTION:
+1. You are strictly a Summarizer.
+2. If the user asks for a detailed explanation, in-depth analysis, or anything other than a summary/condensation, respond ONLY with:
+   "Use Concept Explainer for this question" or "Use Q&A Assistant for this question".
+3. For valid requests, strictly provide concise, clear summaries without extra fluff.`,
+
+  explain: `MODE-SPECIFIC INSTRUCTION:
+1. You are a Concept Explainer.
+2. Provide thorough, detailed, and comprehensive explanations with real-world examples, structural breakdowns, and deep clarity.`,
+
+  qa: `MODE-SPECIFIC INSTRUCTION:
+Provide direct, clear, and accurate answers to general queries.`
 };
 
 const estimateTokens = (text) => {
@@ -143,6 +165,8 @@ export default function App() {
 
     try {
       const systemPrompt = `You are a helpful assistant operating in "${activeMode}" mode.
+
+${MODE_RULES[activeMode] || ''}
 
 STRICT FORMATTING RULES:
 1. NEVER use LaTeX formatting under any circumstances (do NOT use $, $$, \\begin, \\end, \\frac, \\sum, or any LaTeX symbols).
@@ -250,9 +274,6 @@ STRICT FORMATTING RULES:
               </div>
               <div>
                 <h1 className="font-bold text-base tracking-wide">AI assistant</h1>
-                <p className={`text-[11px] ${theme.textSecondary} flex items-center gap-1`}>
-                  Made by <span className="text-cyan-400 font-medium">Areesha Riaz</span> • Powered by <span className="text-cyan-500 font-semibold">Groq</span>
-                </p>
               </div>
             </div>
             
@@ -514,7 +535,7 @@ STRICT FORMATTING RULES:
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-2xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
                 <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
-                <span>Generating answer using Groq...</span>
+                <span>Generating response...</span>
               </div>
             </div>
           )}
@@ -524,6 +545,17 @@ STRICT FORMATTING RULES:
         {/* Input Bar */}
         <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur`}>
           <div className="max-w-3xl mx-auto space-y-2">
+            
+            {/* Branding Display Directly Above Input Box */}
+            <div className="flex items-center justify-between px-1">
+              <span className={`text-[11px] font-medium ${theme.textSecondary} flex items-center gap-1`}>
+                Made by <span className="text-cyan-400 font-semibold">Areesha Riaz</span> • Powered by <span className="text-cyan-500 font-semibold">Groq</span>
+              </span>
+              <span className={`text-[11px] ${theme.textSecondary} hidden sm:inline`}>
+                Enter to send, Shift+Enter for newline
+              </span>
+            </div>
+
             <div className={`relative flex items-center ${theme.bgInput} border ${theme.border} focus-within:border-cyan-500 rounded-2xl p-2 transition-all shadow-lg`}>
               <textarea
                 ref={textareaRef}
@@ -552,15 +584,14 @@ STRICT FORMATTING RULES:
               </button>
             </div>
             
-            <div className={`flex items-center justify-between px-2 text-[11px] ${theme.textSecondary}`}>
-              <span className="hidden sm:inline">Enter to send, Shift+Enter for newline</span>
+            <div className={`flex items-center justify-end px-2 text-[11px] ${theme.textSecondary}`}>
               <span>Max Tokens: {maxTokens}</span>
             </div>
           </div>
         </div>
       </main>
 
-      {/* Settings Drawer/Modal */}
+      {/* Settings Modal */}
       {showSettings && (
         <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex justify-end">
           <div className={`w-full sm:w-96 ${theme.bgSidebar} h-full border-l ${theme.border} p-6 flex flex-col justify-between shadow-2xl`}>
