@@ -53,12 +53,59 @@ const estimateTokens = (text) => {
   return Math.ceil(text.trim().split(/\s+/).length * 1.3);
 };
 
-// Bow SVG Component
+// Bow SVG Component with high visibility
 const BowIcon = ({ className = "w-6 h-6" }) => (
   <svg className={className} viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path d="M256 224C234.333 160 128 144 64 192C0 240 64 336 128 288C153.256 269.058 192 272 224 288L192 384C160 448 224 480 256 416C288 480 352 448 320 384L288 288C320 272 358.744 269.058 384 288C448 336 512 240 448 192C384 144 277.667 160 256 224ZM256 288C240 288 224 272 256 240C288 272 272 288 256 288Z" />
   </svg>
 );
+
+// Sparkle Effect Component
+const SparkleEffect = () => {
+  const [sparkles, setSparkles] = useState([]);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (Math.random() > 0.3) return;
+      
+      const id = Date.now() + Math.random();
+      const newSparkle = {
+        id,
+        x: e.clientX,
+        y: e.clientY,
+        size: Math.random() * 12 + 8,
+        color: ['#f472b6', '#fb7185', '#e879f9', '#fbcfe8'][Math.floor(Math.random() * 4)],
+        rotation: Math.random() * 360,
+      };
+
+      setSparkles(prev => [...prev.slice(-15), newSparkle]);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+      {sparkles.map(sparkle => (
+        <div
+          key={sparkle.id}
+          className="absolute animate-ping duration-700 pointer-events-none"
+          style={{
+            left: `${sparkle.x}px`,
+            top: `${sparkle.y}px`,
+            width: `${sparkle.size}px`,
+            height: `${sparkle.size}px`,
+            transform: `translate(-50%, -50%) rotate(${sparkle.rotation}deg)`,
+            color: sparkle.color,
+          }}
+        >
+          <Sparkles className="w-full h-full drop-shadow-[0_0_6px_rgba(244,114,182,0.8)]" />
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export default function App() {
   const [selectedModel, setSelectedModel] = useState('qwen/qwen3-32b');
@@ -274,15 +321,18 @@ STRICT FORMATTING RULES:
   return (
     <div className={`flex h-screen w-full ${theme.bgMain} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
-      {/* Background Bow Watermarks/Decorations */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-10">
-        <BowIcon className="absolute top-12 left-16 w-24 h-24 text-pink-400 rotate-[-15deg]" />
-        <BowIcon className="absolute top-20 right-24 w-20 h-20 text-rose-400 rotate-[20deg]" />
-        <BowIcon className="absolute top-1/3 left-10 w-28 h-28 text-fuchsia-400 rotate-[45deg]" />
-        <BowIcon className="absolute top-1/2 right-12 w-24 h-24 text-pink-500 rotate-[-30deg]" />
-        <BowIcon className="absolute bottom-16 left-24 w-32 h-32 text-rose-300 rotate-[12deg]" />
-        <BowIcon className="absolute bottom-20 right-32 w-20 h-20 text-pink-400 rotate-[-45deg]" />
-        <BowIcon className="absolute top-2/3 left-1/3 w-16 h-16 text-pink-300 rotate-[10deg]" />
+      {/* Sparkle cursor effect */}
+      <SparkleEffect />
+
+      {/* Highly Visible Background Bow Watermarks/Decorations */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-25">
+        <BowIcon className="absolute top-10 left-12 w-32 h-32 text-pink-500 rotate-[-15deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
+        <BowIcon className="absolute top-16 right-16 w-28 h-28 text-rose-400 rotate-[20deg] drop-shadow-[0_0_10px_rgba(251,113,133,0.5)]" />
+        <BowIcon className="absolute top-1/3 left-8 w-36 h-36 text-fuchsia-400 rotate-[45deg] drop-shadow-[0_0_12px_rgba(232,121,249,0.5)]" />
+        <BowIcon className="absolute top-1/2 right-10 w-32 h-32 text-pink-400 rotate-[-30deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
+        <BowIcon className="absolute bottom-12 left-20 w-40 h-40 text-rose-300 rotate-[12deg] drop-shadow-[0_0_15px_rgba(253,164,175,0.5)]" />
+        <BowIcon className="absolute bottom-16 right-24 w-28 h-28 text-pink-500 rotate-[-45deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
+        <BowIcon className="absolute top-2/3 left-1/3 w-24 h-24 text-pink-400 rotate-[10deg] drop-shadow-[0_0_8px_rgba(244,114,182,0.5)]" />
       </div>
 
       {isMobileMenuOpen && (
