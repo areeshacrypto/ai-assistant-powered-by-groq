@@ -2,14 +2,24 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { 
   MessageSquare, FileText, Calculator, Lightbulb, Settings, Trash2, Send, 
   Bot, User, Copy, Check, Cpu, ChevronRight, ChevronDown, Plus, RefreshCw, Zap, Sparkles, Sun, Moon,
-  Menu, X, History, Paperclip
+  Menu, X, History, Paperclip, Heart
 } from 'lucide-react';
 
+// Custom Whimsical Bow Component
+const BowIcon = ({ className = "w-4 h-4" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 11C11.3 9.8 9.5 8 7 8C4.2 8 2 10.2 2 12C2 13.8 4.2 16 7 16C9.5 16 11.3 14.2 12 13C12.7 14.2 14.5 16 17 16C19.8 16 22 13.8 22 12C22 10.2 19.8 8 17 8C14.5 8 12.7 9.8 12 11ZM7 14C5.3 14 4 13.1 4 12C4 10.9 5.3 10 7 10C8.8 10 10.2 11.2 10.8 12C10.2 12.8 8.8 14 7 14ZM17 14C15.2 14 13.8 12.8 13.2 12C13.8 11.2 15.2 10 17 10C18.7 10 20 10.9 20 12C20 13.1 18.7 14 17 14Z" />
+    <path d="M12 12.5M10.5 12C10.5 11.2 11.2 10.5 12 10.5C12.8 10.5 13.5 11.2 13.5 12C13.5 12.8 12.8 13.5 12 13.5C11.2 13.5 10.5 12.8 10.5 12Z" />
+    <path d="M9.5 14.5L7 20L10 19L11.5 15.5" />
+    <path d="M14.5 14.5L17 20L14 19L12.5 15.5" />
+  </svg>
+);
+
 const MODES = [
-  { id: 'qa', name: 'Q&A Assistant', icon: MessageSquare, color: 'from-blue-500 to-cyan-500', desc: 'Direct, to-the-point concise answers' },
-  { id: 'summarize', name: 'Summarizer', icon: FileText, color: 'from-emerald-500 to-teal-500', desc: 'Strictly short summaries only' },
-  { id: 'math', name: 'Math Solver', icon: Calculator, color: 'from-amber-500 to-orange-500', desc: 'Step-by-step mathematical problem solving' },
-  { id: 'explain', name: 'Concept Explainer', icon: Lightbulb, color: 'from-purple-500 to-indigo-500', desc: 'Detailed explanations regardless of length' }
+  { id: 'qa', name: 'Q&A Assistant', icon: MessageSquare, color: 'from-pink-400 to-rose-400', desc: 'Direct, to-the-point concise answers' },
+  { id: 'summarize', name: 'Summarizer', icon: FileText, color: 'from-purple-300 to-pink-300', desc: 'Strictly short summaries only' },
+  { id: 'math', name: 'Math Solver', icon: Calculator, color: 'from-amber-300 to-pink-300', desc: 'Step-by-step mathematical problem solving' },
+  { id: 'explain', name: 'Concept Explainer', icon: Lightbulb, color: 'from-indigo-300 to-purple-300', desc: 'Detailed explanations regardless of length' }
 ];
 
 const GROQ_MODELS = [
@@ -57,7 +67,7 @@ export default function App() {
   const [selectedModel, setSelectedModel] = useState('qwen/qwen3-32b');
   const [maxTokens, setMaxTokens] = useState(500);
   const [activeMode, setActiveMode] = useState('qa');
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHistoryVisible, setIsHistoryVisible] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -93,7 +103,6 @@ export default function App() {
     return sessions.find(s => s.id === activeSessionId) || sessions[0] || { id: Date.now(), title: 'New Chat', mode: 'qa', messages: [] };
   }, [sessions, activeSessionId]);
 
-  // Separate current active session from older history sessions
   const historicalSessions = useMemo(() => {
     return sessions.filter(s => s.id !== activeSessionId);
   }, [sessions, activeSessionId]);
@@ -181,7 +190,7 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const systemPrompt = `You are a helpful assistant operating in "${activeMode}" mode.
+      const systemPrompt = `You are Nova, a helpful AI assistant operating in "${activeMode}" mode.
 
 ${MODE_RULES[activeMode] || ''}
 
@@ -258,13 +267,13 @@ STRICT FORMATTING RULES:
   };
 
   const theme = {
-    bgMain: isDarkMode ? 'bg-slate-950' : 'bg-slate-50',
-    bgSidebar: isDarkMode ? 'bg-slate-900' : 'bg-white',
-    bgHeader: isDarkMode ? 'bg-slate-900/40' : 'bg-white/80',
-    border: isDarkMode ? 'border-slate-800' : 'border-slate-200',
-    textPrimary: isDarkMode ? 'text-slate-100' : 'text-slate-900',
-    textSecondary: isDarkMode ? 'text-slate-400' : 'text-slate-500',
-    bgCard: isDarkMode ? 'bg-slate-900' : 'bg-slate-100',
+    bgMain: isDarkMode ? 'bg-slate-950' : 'bg-pink-50/60',
+    bgSidebar: isDarkMode ? 'bg-slate-900' : 'bg-pink-100/40',
+    bgHeader: isDarkMode ? 'bg-slate-900/40' : 'bg-white/70',
+    border: isDarkMode ? 'border-slate-800' : 'border-pink-200/60',
+    textPrimary: isDarkMode ? 'text-slate-100' : 'text-slate-800',
+    textSecondary: isDarkMode ? 'text-pink-400' : 'text-pink-400',
+    bgCard: isDarkMode ? 'bg-slate-900' : 'bg-white/80',
     bgInput: isDarkMode ? 'bg-slate-950' : 'bg-white',
   };
 
@@ -272,7 +281,7 @@ STRICT FORMATTING RULES:
     <div className={`flex h-screen w-full ${theme.bgMain} ${theme.textPrimary} font-sans antialiased overflow-hidden transition-colors duration-200`}>
       
       {isMobileMenuOpen && (
-        <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-30 md:hidden" />
+        <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-pink-950/30 backdrop-blur-sm z-30 md:hidden" />
       )}
 
       {/* Sidebar */}
@@ -281,23 +290,29 @@ STRICT FORMATTING RULES:
           
           <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-cyan-500/20">
+              <div className="p-2 bg-gradient-to-tr from-pink-400 to-rose-300 rounded-2xl shadow-md shadow-pink-300/30 relative">
                 <Sparkles className="w-5 h-5 text-white" />
+                <BowIcon className="w-3.5 h-3.5 text-rose-500 absolute -top-1.5 -right-1.5 drop-shadow-sm" />
               </div>
-              <h1 className="font-bold text-base tracking-wide">AI assistant</h1>
+              <h1 className="font-bold text-base tracking-wide text-rose-500 flex items-center gap-1.5">
+                Nova AI <BowIcon className="w-4 h-4 text-pink-400" />
+              </h1>
             </div>
             <div className="flex items-center space-x-1">
-              <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-lg ${theme.textSecondary} hover:text-cyan-400 transition-colors`} title="New Chat">
+              <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} hover:text-rose-400 transition-colors`} title="New Chat">
                 <Plus className="w-5 h-5" />
               </button>
-              <button onClick={() => setIsMobileMenuOpen(false)} className={`p-2 hover:${theme.bgCard} rounded-lg ${theme.textSecondary} md:hidden`}>
+              <button onClick={() => setIsMobileMenuOpen(false)} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} md:hidden`}>
                 <X className="w-5 h-5" />
               </button>
             </div>
           </div>
 
           <div className={`p-4 border-b ${theme.border}`}>
-            <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} mb-2 block`}>Assistant Mode</label>
+            <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} mb-2 block flex items-center justify-between`}>
+              <span>Assistant Mode</span>
+              <BowIcon className="w-3.5 h-3.5 text-pink-300" />
+            </label>
             <div className="grid grid-cols-2 gap-2">
               {MODES.map(mode => {
                 const Icon = mode.icon;
@@ -313,13 +328,13 @@ STRICT FORMATTING RULES:
                         setIsMobileMenuOpen(false);
                       }
                     }}
-                    className={`flex flex-col items-start p-2.5 rounded-xl text-left transition-all border ${
+                    className={`flex flex-col items-start p-2.5 rounded-2xl text-left transition-all border ${
                       isActive
-                        ? isDarkMode ? 'bg-slate-800 border-cyan-500/50 text-white shadow-md' : 'bg-white border-cyan-500 text-slate-900 shadow-md'
+                        ? isDarkMode ? 'bg-slate-800 border-pink-400 text-white shadow-md' : 'bg-white border-rose-300 text-slate-800 shadow-md shadow-pink-100/50'
                         : `${theme.bgCard} ${theme.border} ${theme.textSecondary}`
                     }`}
                   >
-                    <div className={`p-1.5 rounded-lg mb-1.5 bg-gradient-to-r ${mode.color} text-white`}>
+                    <div className={`p-1.5 rounded-xl mb-1.5 bg-gradient-to-r ${mode.color} text-white`}>
                       <Icon className="w-3.5 h-3.5" />
                     </div>
                     <span className="text-xs font-medium leading-tight">{mode.name}</span>
@@ -329,18 +344,19 @@ STRICT FORMATTING RULES:
             </div>
           </div>
 
-          {/* Active Chat Tab directly above History */}
+          {/* Active Chat Tab */}
           <div className="p-4 pb-2 space-y-2">
             <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} block`}>Current Chat</label>
-            <div className={`flex items-center justify-between p-2.5 rounded-xl border border-cyan-500/50 bg-cyan-500/10 text-cyan-400 font-medium text-xs`}>
+            <div className={`flex items-center justify-between p-2.5 rounded-2xl border border-rose-200 bg-rose-50/80 text-rose-500 font-medium text-xs shadow-sm`}>
               <div className="flex items-center space-x-2 truncate">
                 <MessageSquare className="w-4 h-4 shrink-0" />
                 <span className="truncate">{activeSession.title}</span>
               </div>
+              <BowIcon className="w-3.5 h-3.5 text-pink-400 shrink-0" />
             </div>
             <button
               onClick={() => createNewSession()}
-              className="w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border border-dashed border-cyan-500/40 hover:border-cyan-500 text-cyan-400 hover:bg-cyan-500/10 text-xs font-semibold transition-all"
+              className="w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-2xl border border-dashed border-rose-300 hover:border-rose-400 text-rose-400 hover:bg-rose-50 text-xs font-semibold transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>+ Start New Chat</span>
@@ -352,13 +368,13 @@ STRICT FORMATTING RULES:
             <div className="flex items-center justify-between mb-2 px-1">
               <button 
                 onClick={() => setIsHistoryVisible(!isHistoryVisible)}
-                className={`flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} hover:text-cyan-400 transition-colors`}
+                className={`flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} hover:text-rose-400 transition-colors`}
               >
                 <History className="w-3.5 h-3.5" />
                 <span>History</span>
                 {isHistoryVisible ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
               </button>
-              <span className={`text-[10px] ${theme.bgCard} px-2 py-0.5 rounded-full ${theme.textSecondary}`}>
+              <span className={`text-[10px] ${theme.bgCard} px-2 py-0.5 rounded-full ${theme.textSecondary} border border-pink-200/50`}>
                 {historicalSessions.length}
               </span>
             </div>
@@ -376,7 +392,7 @@ STRICT FORMATTING RULES:
                         setActiveMode(s.mode || 'qa');
                         setIsMobileMenuOpen(false);
                       }}
-                      className={`group flex items-center justify-between p-2.5 rounded-xl cursor-pointer text-xs transition-all border bg-transparent border-transparent ${theme.textSecondary} hover:${theme.bgCard}`}
+                      className={`group flex items-center justify-between p-2.5 rounded-2xl cursor-pointer text-xs transition-all border bg-transparent border-transparent ${theme.textSecondary} hover:${theme.bgCard}`}
                     >
                       <div className="flex items-center space-x-2.5 truncate">
                         <MessageSquare className="w-3.5 h-3.5 shrink-0" />
@@ -399,10 +415,10 @@ STRICT FORMATTING RULES:
           <div className={`p-4 border-t ${theme.border}`}>
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="font-medium">API Active</span>
+                <span className="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
+                <span className="font-medium text-pink-500">Nova Active</span>
               </div>
-              <button onClick={() => { setShowSettings(!showSettings); setIsMobileMenuOpen(false); }} className={`p-1.5 hover:${theme.bgCard} rounded-lg ${theme.textSecondary} transition-colors`} title="Settings">
+              <button onClick={() => { setShowSettings(!showSettings); setIsMobileMenuOpen(false); }} className={`p-1.5 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="Settings">
                 <Settings className="w-4 h-4" />
               </button>
             </div>
@@ -414,28 +430,30 @@ STRICT FORMATTING RULES:
       <main className="flex-1 flex flex-col h-full relative overflow-hidden">
         <header className={`h-16 border-b ${theme.border} ${theme.bgHeader} backdrop-blur px-4 md:px-6 flex items-center justify-between z-10`}>
           <div className="flex items-center space-x-3">
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className={`p-2 rounded-xl border ${theme.border} ${theme.bgCard} md:hidden text-cyan-500`}>
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className={`p-2 rounded-2xl border ${theme.border} ${theme.bgCard} md:hidden text-pink-400`}>
               <Menu className="w-5 h-5" />
             </button>
-            <div className={`p-2 rounded-xl bg-gradient-to-r ${MODES.find(m => m.id === activeMode)?.color}`}>
+            <div className={`p-2 rounded-2xl bg-gradient-to-r ${MODES.find(m => m.id === activeMode)?.color}`}>
               {React.createElement(MODES.find(m => m.id === activeMode)?.icon || MessageSquare, { className: 'w-4 h-4 text-white' })}
             </div>
             <div>
-              <h2 className="text-sm font-semibold">{MODES.find(m => m.id === activeMode)?.name}</h2>
+              <h2 className="text-sm font-semibold flex items-center gap-1">
+                Nova ({MODES.find(m => m.id === activeMode)?.name})
+              </h2>
               <p className={`text-xs ${theme.textSecondary} hidden sm:block`}>Model: <span className="font-mono">{selectedModel}</span></p>
             </div>
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
             <div className={`hidden sm:flex items-center space-x-1.5 text-xs px-3 py-1.5 rounded-full border ${theme.border} ${theme.bgCard}`}>
-              <Zap className="w-3.5 h-3.5 text-cyan-500" />
+              <Zap className="w-3.5 h-3.5 text-pink-400" />
               <span>Est. Tokens: <strong className="font-mono">{totalTokens}</strong></span>
             </div>
-            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`p-2 rounded-lg border ${theme.border} ${theme.bgCard}`}>
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-600" />}
+            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`p-2 rounded-xl border ${theme.border} ${theme.bgCard}`}>
+              {isDarkMode ? <Sun className="w-4 h-4 text-amber-300" /> : <Moon className="w-4 h-4 text-pink-400" />}
             </button>
-            <button onClick={() => createNewSession()} className={`text-xs flex items-center space-x-1.5 ${theme.bgCard} px-3 py-2 rounded-lg border ${theme.border}`}>
-              <RefreshCw className="w-3.5 h-3.5" />
+            <button onClick={() => createNewSession()} className={`text-xs flex items-center space-x-1.5 ${theme.bgCard} px-3 py-2 rounded-xl border ${theme.border}`}>
+              <RefreshCw className="w-3.5 h-3.5 text-pink-400" />
               <span className="hidden sm:inline">Reset</span>
             </button>
           </div>
@@ -445,11 +463,14 @@ STRICT FORMATTING RULES:
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-4">
-              <div className={`p-4 ${theme.bgCard} border ${theme.border} rounded-2xl shadow-xl`}>
-                <Bot className="w-10 h-10 text-cyan-500" />
+              <div className={`p-5 ${theme.bgCard} border ${theme.border} rounded-3xl shadow-lg relative`}>
+                <Bot className="w-10 h-10 text-pink-400" />
+                <BowIcon className="w-5 h-5 text-rose-400 absolute -top-2 -right-2 drop-shadow" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold">How can I help you today?</h3>
+                <h3 className="text-lg font-semibold flex items-center justify-center gap-1.5">
+                  How can Nova help you today? <BowIcon className="w-4 h-4 text-rose-400" />
+                </h3>
                 <p className={`text-sm ${theme.textSecondary} mt-1`}>Select a prompt below or type your message to get started.</p>
               </div>
               <div className="w-full space-y-2 pt-4">
@@ -457,10 +478,10 @@ STRICT FORMATTING RULES:
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(prompt)}
-                    className={`w-full text-left p-3 rounded-xl ${theme.bgCard} border ${theme.border} text-xs transition-all flex items-center justify-between group hover:border-cyan-500/50`}
+                    className={`w-full text-left p-3.5 rounded-2xl ${theme.bgCard} border ${theme.border} text-xs transition-all flex items-center justify-between group hover:border-pink-300`}
                   >
                     <span>"{prompt}"</span>
-                    <ChevronRight className="w-4 h-4 text-cyan-500" />
+                    <ChevronRight className="w-4 h-4 text-pink-400" />
                   </button>
                 ))}
               </div>
@@ -469,36 +490,38 @@ STRICT FORMATTING RULES:
             messages.map((msg, index) => (
               <div key={index} className={`flex gap-3 sm:gap-4 max-w-3xl mx-auto ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'assistant' && (
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${msg.isError ? 'bg-rose-500/10 border-rose-500 text-rose-500' : `${theme.bgCard} ${theme.border} text-cyan-500`}`}>
+                  <div className={`w-8 h-8 rounded-2xl flex items-center justify-center shrink-0 border ${msg.isError ? 'bg-rose-500/10 border-rose-500 text-rose-500' : `${theme.bgCard} ${theme.border} text-pink-400`}`}>
                     <Bot className="w-4 h-4" />
                   </div>
                 )}
-                <div className={`group relative max-w-[90%] sm:max-w-[85%] rounded-2xl p-3.5 sm:p-4 text-sm leading-relaxed border ${
+                <div className={`group relative max-w-[90%] sm:max-w-[85%] rounded-3xl p-3.5 sm:p-4 text-sm leading-relaxed border ${
                   msg.role === 'user'
-                    ? 'bg-gradient-to-r from-cyan-600 to-blue-600 border-cyan-500 text-white rounded-tr-none shadow-lg'
+                    ? 'bg-gradient-to-r from-pink-400 to-rose-400 border-pink-300 text-white rounded-tr-none shadow-md'
                     : msg.isError
                     ? 'bg-rose-500/10 border-rose-500 text-rose-500 rounded-tl-none'
-                    : `${theme.bgCard} ${theme.border} rounded-tl-none shadow-md`
+                    : `${theme.bgCard} ${theme.border} rounded-tl-none shadow-sm`
                 }`}>
                   {msg.role === 'assistant' && (
                     <div className={`flex items-center justify-between border-b ${theme.border} pb-2 mb-2 text-xs ${theme.textSecondary}`}>
-                      <span className="font-mono text-[11px] text-cyan-500">Assistant</span>
+                      <span className="font-mono text-[11px] text-pink-400 flex items-center gap-1">
+                        Nova <BowIcon className="w-3 h-3 text-pink-300" />
+                      </span>
                       <button onClick={() => copyToClipboard(msg.content, index)} className="p-1 hover:opacity-80">
                         {copiedIndex === index ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                       </button>
                     </div>
                   )}
                   {msg.image && (
-                    <div className="mb-3 overflow-hidden rounded-xl border border-white/20">
+                    <div className="mb-3 overflow-hidden rounded-2xl border border-white/20">
                       <img src={msg.image} alt="User attachment" className="max-h-60 w-auto object-cover" />
                     </div>
                   )}
                   <div className="whitespace-pre-wrap font-sans text-sm">{msg.content}</div>
-                  <div className={`text-[10px] mt-2 text-right ${msg.role === 'user' ? 'text-cyan-100/70' : theme.textSecondary}`}>{msg.timestamp}</div>
+                  <div className={`text-[10px] mt-2 text-right ${msg.role === 'user' ? 'text-pink-100' : theme.textSecondary}`}>{msg.timestamp}</div>
                 </div>
                 {msg.role === 'user' && (
-                  <div className={`w-8 h-8 rounded-xl ${theme.bgCard} border ${theme.border} flex items-center justify-center shrink-0`}>
-                    <User className="w-4 h-4" />
+                  <div className={`w-8 h-8 rounded-2xl ${theme.bgCard} border ${theme.border} flex items-center justify-center shrink-0`}>
+                    <User className="w-4 h-4 text-pink-400" />
                   </div>
                 )}
               </div>
@@ -507,27 +530,31 @@ STRICT FORMATTING RULES:
 
           {isLoading && (
             <div className="flex gap-4 max-w-3xl mx-auto items-center">
-              <div className={`w-8 h-8 rounded-xl ${theme.bgCard} border ${theme.border} flex items-center justify-center text-cyan-500`}>
+              <div className={`w-8 h-8 rounded-2xl ${theme.bgCard} border ${theme.border} flex items-center justify-center text-pink-400`}>
                 <Bot className="w-4 h-4 animate-spin" />
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-2xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
-                <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
-                <span>Generating response...</span>
+                <span className="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
+                <span>Nova is thinking...</span>
               </div>
             </div>
           )}
 
-          {/* "Powered by Groq" positioned inside chat area so it scrolls up when swiping */}
-          <div className="max-w-3xl mx-auto pt-4 flex justify-end">
-            <span className={`text-[11px] font-medium ${theme.textSecondary}`}>
-              Powered by <span className="text-cyan-500 font-semibold">Groq</span>
+          {/* Banner positioned directly above the input section */}
+          <div className="max-w-3xl mx-auto pt-4 flex items-center justify-between">
+            <span className="text-sm font-semibold flex items-center gap-1.5">
+              Made by <span className="text-rose-400 font-bold">Areesha Riaz</span>
+              <BowIcon className="w-4 h-4 text-pink-400" />
+            </span>
+            <span className={`text-xs font-medium ${theme.textSecondary} flex items-center gap-1`}>
+              Powered by <span className="text-pink-500 font-semibold">Groq</span>
             </span>
           </div>
 
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar with Persistent "Made by Areesha Riaz" */}
+        {/* Input Bar */}
         <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur`}>
           <div className="max-w-3xl mx-auto space-y-2">
             
@@ -535,18 +562,18 @@ STRICT FORMATTING RULES:
 
             {selectedImage && (
               <div className="relative inline-block mb-1">
-                <img src={selectedImage} alt="Attachment preview" className="w-16 h-16 object-cover rounded-xl border-2 border-cyan-500 shadow-md" />
-                <button onClick={() => setSelectedImage(null)} className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 text-xs">
+                <img src={selectedImage} alt="Attachment preview" className="w-16 h-16 object-cover rounded-2xl border-2 border-pink-400 shadow-md" />
+                <button onClick={() => setSelectedImage(null)} className="absolute -top-2 -right-2 bg-rose-400 text-white rounded-full p-1 text-xs">
                   <X className="w-3 h-3" />
                 </button>
               </div>
             )}
 
-            <div className={`relative flex items-center ${theme.bgInput} border ${theme.border} focus-within:border-cyan-500 rounded-2xl p-2 transition-all shadow-lg`}>
+            <div className={`relative flex items-center ${theme.bgInput} border ${theme.border} focus-within:border-pink-300 rounded-3xl p-2 transition-all shadow-md`}>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`p-2 rounded-xl text-slate-400 hover:text-cyan-400 hover:${theme.bgCard} transition-colors`}
+                className={`p-2 rounded-2xl text-pink-300 hover:text-pink-400 hover:${theme.bgCard} transition-colors`}
                 title="Attach Image"
               >
                 <Paperclip className="w-4 h-4" />
@@ -562,17 +589,17 @@ STRICT FORMATTING RULES:
                     handleSendMessage();
                   }
                 }}
-                placeholder={`Ask ${MODES.find(m => m.id === activeMode)?.name}...`}
+                placeholder={`Ask Nova...`}
                 rows={1}
-                className={`flex-1 bg-transparent px-2 py-1.5 text-sm ${theme.textPrimary} placeholder-slate-400 focus:outline-none resize-none overflow-y-auto max-h-32`}
+                className={`flex-1 bg-transparent px-2 py-1.5 text-sm ${theme.textPrimary} placeholder-pink-300 focus:outline-none resize-none overflow-y-auto max-h-32`}
               />
 
               <button
                 onClick={() => handleSendMessage()}
                 disabled={(!inputMessage.trim() && !selectedImage) || isLoading}
-                className={`p-2.5 rounded-xl transition-all ${
+                className={`p-2.5 rounded-2xl transition-all ${
                   (inputMessage.trim() || selectedImage) && !isLoading
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-md hover:opacity-90'
+                    ? 'bg-gradient-to-r from-pink-400 to-rose-400 text-white shadow-md hover:opacity-90'
                     : `${theme.bgCard} ${theme.textSecondary} cursor-not-allowed`
                 }`}
               >
@@ -580,12 +607,8 @@ STRICT FORMATTING RULES:
               </button>
             </div>
             
-            {/* Bottom Row: Shortcut Key Hint + Persistent "Made by Areesha Riaz" */}
             <div className="flex items-center justify-between px-2 text-[11px]">
               <span className={theme.textSecondary}>Enter to send, Shift+Enter for newline</span>
-              <span className="font-medium">
-                Made by <span className="text-cyan-400 font-semibold">Areesha Riaz</span>
-              </span>
             </div>
           </div>
         </div>
@@ -593,13 +616,15 @@ STRICT FORMATTING RULES:
 
       {/* Settings Modal */}
       {showSettings && (
-        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex justify-end">
+        <div className="fixed inset-0 bg-pink-950/20 backdrop-blur-sm z-50 flex justify-end">
           <div className={`w-full sm:w-96 ${theme.bgSidebar} h-full border-l ${theme.border} p-6 flex flex-col justify-between shadow-2xl`}>
             <div className="space-y-6">
               <div className={`flex items-center justify-between border-b ${theme.border} pb-4`}>
                 <div className="flex items-center space-x-2">
-                  <Settings className="w-5 h-5 text-cyan-500" />
-                  <h3 className="font-semibold">Model Settings</h3>
+                  <Settings className="w-5 h-5 text-pink-400" />
+                  <h3 className="font-semibold flex items-center gap-1.5">
+                    Nova Settings <BowIcon className="w-4 h-4 text-pink-300" />
+                  </h3>
                 </div>
                 <button onClick={() => setShowSettings(false)} className={`${theme.textSecondary} hover:${theme.textPrimary}`}>✕</button>
               </div>
@@ -607,12 +632,12 @@ STRICT FORMATTING RULES:
               <div className="space-y-2">
                 <label className="text-xs font-semibold flex items-center justify-between">
                   <span>Model Selector</span>
-                  <Cpu className="w-3.5 h-3.5" />
+                  <Cpu className="w-3.5 h-3.5 text-pink-400" />
                 </label>
                 <select
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
-                  className={`w-full ${theme.bgInput} border ${theme.border} rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-cyan-500`}
+                  className={`w-full ${theme.bgInput} border ${theme.border} rounded-2xl px-3 py-2 text-xs focus:outline-none focus:border-pink-300`}
                 >
                   {GROQ_MODELS.map(m => (
                     <option key={m.id} value={m.id}>{m.name}</option>
@@ -623,7 +648,7 @@ STRICT FORMATTING RULES:
               <div className="space-y-2">
                 <div className="flex justify-between text-xs font-semibold">
                   <span>Max Response Tokens</span>
-                  <span className="font-mono text-cyan-500">{maxTokens}</span>
+                  <span className="font-mono text-pink-400">{maxTokens}</span>
                 </div>
                 <input
                   type="range"
@@ -632,12 +657,12 @@ STRICT FORMATTING RULES:
                   step="50"
                   value={maxTokens}
                   onChange={(e) => setMaxTokens(e.target.value)}
-                  className="w-full accent-cyan-500 bg-slate-200 rounded-lg cursor-pointer"
+                  className="w-full accent-pink-400 bg-pink-100 rounded-lg cursor-pointer"
                 />
               </div>
             </div>
 
-            <button onClick={() => setShowSettings(false)} className="w-full py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl text-xs font-semibold">
+            <button onClick={() => setShowSettings(false)} className="w-full py-2.5 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-2xl text-xs font-semibold shadow-md">
               Save & Apply
             </button>
           </div>
