@@ -137,7 +137,8 @@ export default function App() {
         { role: 'user', content: text }
       ];
 
-      const response = await fetch('http://127.0.0.1:5000/api/chat', {
+      // Relative fetch URL works both locally and on Vercel deployments
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -173,7 +174,7 @@ export default function App() {
       const errorMessage = {
         role: 'assistant',
         isError: true,
-        content: `Error: ${err.message || 'Failed to connect to Flask backend.'}`,
+        content: `Error: ${err.message || 'Failed to connect to backend.'}`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setSessions(prev => prev.map(s => {
@@ -308,7 +309,7 @@ export default function App() {
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="font-medium">Flask Server Active (:5000)</span>
+                <span className="font-medium">Vercel API Active</span>
               </div>
               <button
                 onClick={() => setShowSettings(!showSettings)}
@@ -475,7 +476,7 @@ export default function App() {
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-2xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
                 <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
-                <span>Generating answer using Flask backend...</span>
+                <span>Generating answer using Groq...</span>
               </div>
             </div>
           )}
