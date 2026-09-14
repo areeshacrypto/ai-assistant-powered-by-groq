@@ -142,7 +142,14 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const systemPrompt = `You are a helpful assistant operating in "${activeMode}" mode. Provide concise responses using markdown tables where applicable. Include header separator rows in markdown tables. For standard mathematics, use LaTeX syntax ($...$ or $$...$$).`;
+      const systemPrompt = `You are a helpful assistant operating in "${activeMode}" mode. 
+
+      STRICT FORMATTING RULES:
+      1. NEVER use LaTeX formatting under any circumstances (do NOT use $, $$, \\begin, \\end, \\frac, \\sum, or any LaTeX symbols). 
+      2. Write all math and technical expressions in plain, standard text or simple Unicode (e.g., use "2x + 5 = 15", "f'(x) = 6x + 4", "3x^2").
+      3. DO NOT use asterisks (*) for emphasis, bolding, or lists. 
+      4. DO NOT use horizontal lines, dividers, or dashes (---, ___).
+      5. Output pure, clean plain text with standard line breaks for paragraphs.`;
 
       const historyForApi = [
         { role: 'system', content: systemPrompt },
