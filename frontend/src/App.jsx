@@ -6,10 +6,10 @@ import {
 } from 'lucide-react';
 
 const MODES = [
-  { id: 'qa', name: 'Q&A Assistant', icon: MessageSquare, color: 'from-blue-500 to-cyan-500', desc: 'General knowledge & chat assistant' },
-  { id: 'summarize', name: 'Summarizer', icon: FileText, color: 'from-emerald-500 to-teal-500', desc: 'Condense long articles and documents' },
+  { id: 'qa', name: 'Q&A Assistant', icon: MessageSquare, color: 'from-blue-500 to-cyan-500', desc: 'Direct, to-the-point concise answers' },
+  { id: 'summarize', name: 'Summarizer', icon: FileText, color: 'from-emerald-500 to-teal-500', desc: 'Strictly short summaries only' },
   { id: 'math', name: 'Math Solver', icon: Calculator, color: 'from-amber-500 to-orange-500', desc: 'Step-by-step mathematical problem solving' },
-  { id: 'explain', name: 'Concept Explainer', icon: Lightbulb, color: 'from-purple-500 to-indigo-500', desc: 'Break down complex topics simply' }
+  { id: 'explain', name: 'Concept Explainer', icon: Lightbulb, color: 'from-purple-500 to-indigo-500', desc: 'Detailed explanations regardless of length' }
 ];
 
 const GROQ_MODELS = [
@@ -22,46 +22,46 @@ const GROQ_MODELS = [
 const MODE_PROMPTS = {
   qa: [
     "When was Quaid-e-Azam born?",
-    "Explain quantum computing simply",
-    "What are the top 3 best practices for Python clean code?"
+    "What is the capital of France?",
+    "List 3 clean code tips for Python"
   ],
   summarize: [
-    "Summarize the key points of the theory of relativity",
-    "TL;DR of object-oriented programming concepts",
-    "Provide a 3-bullet summary on how neural networks work"
+    "Summarize the theory of relativity in two lines",
+    "TL;DR of object-oriented programming",
+    "Give a short summary of quantum computing"
   ],
   math: [
     "Solve 2x + 5 = 15 step by step",
     "Calculate the derivative of f(x) = 3x^2 + 4x - 5",
-    "Explain Bayes' Theorem with a quick numerical example"
+    "What is the integral of 2x dx?"
   ],
   explain: [
-    "Explain API rate limits like I am 10 years old",
-    "How does Docker containerization work under the hood?",
-    "What is the difference between synchronous and asynchronous code?"
+    "Explain APIs",
+    "How does Docker work?",
+    "What is recursion?"
   ]
 };
 
 const MODE_RULES = {
-  math: `MODE-SPECIFIC INSTRUCTION:
+  math: `MODE-SPECIFIC INSTRUCTIONS FOR MATH SOLVER:
 1. You are strictly a Math Solver.
-2. If the user's query is NOT a mathematical problem, equation, calculation, or math-related question, respond ONLY with:
-   "Use [appropriate mode name] for this question." 
-   (For example: "Use Q&A Assistant for this question" or "Use Concept Explainer for this question").
-3. For valid math queries, provide step-by-step mathematical reasoning.`,
+2. If the query is NOT a math question:
+   - If it is a direct or to-the-point question, reply ONLY: "Use Q&A Assistant for this question"
+   - If it asks to explain something, reply ONLY: "Use Concept Explainer for this question"
+   - If it asks to summarize something, reply ONLY: "Use Summarizer for this question"
+3. For valid math queries, provide clear step-by-step math reasoning without LaTeX ($ or $$).`,
 
-  summarize: `MODE-SPECIFIC INSTRUCTION:
-1. You are strictly a Summarizer.
-2. If the user asks for a detailed explanation, in-depth analysis, or anything other than a summary/condensation, respond ONLY with:
-   "Use Concept Explainer for this question" or "Use Q&A Assistant for this question".
-3. For valid requests, strictly provide concise, clear summaries without extra fluff.`,
-
-  explain: `MODE-SPECIFIC INSTRUCTION:
+  explain: `MODE-SPECIFIC INSTRUCTIONS FOR CONCEPT EXPLAINER:
 1. You are a Concept Explainer.
-2. Provide thorough, detailed, and comprehensive explanations with real-world examples, structural breakdowns, and deep clarity.`,
+2. ALWAYS provide a thorough, detailed, and clear explanation with examples, no matter how short or simple the user query is.`,
 
-  qa: `MODE-SPECIFIC INSTRUCTION:
-Provide direct, clear, and accurate answers to general queries.`
+  summarize: `MODE-SPECIFIC INSTRUCTIONS FOR SUMMARIZER:
+1. You are strictly a Summarizer.
+2. Strictly output ONLY a short, brief summary. Do not write full-length articles or long explanations.`,
+
+  qa: `MODE-SPECIFIC INSTRUCTIONS FOR Q&A ASSISTANT:
+1. You are a Q&A Assistant.
+2. Answer directly and stay strictly to the point. No fluff or extra commentary.`
 };
 
 const estimateTokens = (text) => {
@@ -185,6 +185,7 @@ STRICT FORMATTING RULES:
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          mode: activeMode,
           model: selectedModel,
           messages: historyForApi,
           max_tokens: Number(maxTokens)
@@ -249,7 +250,7 @@ STRICT FORMATTING RULES:
   return (
     <div className={`flex h-screen w-full ${theme.bgMain} ${theme.textPrimary} font-sans antialiased overflow-hidden transition-colors duration-200`}>
       
-      {/* Mobile Drawer Overlay */}
+      {/* Mobile Backdrop */}
       {isMobileMenuOpen && (
         <div 
           onClick={() => setIsMobileMenuOpen(false)}
@@ -266,7 +267,6 @@ STRICT FORMATTING RULES:
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         <div className="flex flex-col h-full overflow-hidden">
-          
           <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-cyan-500/20">
@@ -386,13 +386,11 @@ STRICT FORMATTING RULES:
               </button>
             </div>
           </div>
-
         </div>
       </aside>
 
-      {/* Main Workspace */}
+      {/* Main Container */}
       <main className="flex-1 flex flex-col h-full relative overflow-hidden">
-        
         <header className={`h-16 border-b ${theme.border} ${theme.bgHeader} backdrop-blur px-4 md:px-6 flex items-center justify-between z-10`}>
           <div className="flex items-center space-x-3">
             <button
@@ -490,7 +488,6 @@ STRICT FORMATTING RULES:
                     ? 'bg-rose-500/10 border-rose-500 text-rose-500 rounded-tl-none'
                     : `${theme.bgCard} ${theme.border} rounded-tl-none shadow-md`
                 }`}>
-                  
                   {msg.role === 'assistant' && (
                     <div className={`flex items-center justify-between border-b ${theme.border} pb-2 mb-2 text-xs ${theme.textSecondary}`}>
                       <span className="font-mono text-[11px] text-cyan-500">Assistant</span>
@@ -542,11 +539,10 @@ STRICT FORMATTING RULES:
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar */}
+        {/* Input Area */}
         <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur`}>
           <div className="max-w-3xl mx-auto space-y-2">
             
-            {/* Branding Display Directly Above Input Box */}
             <div className="flex items-center justify-between px-1">
               <span className={`text-[11px] font-medium ${theme.textSecondary} flex items-center gap-1`}>
                 Made by <span className="text-cyan-400 font-semibold">Areesha Riaz</span> • Powered by <span className="text-cyan-500 font-semibold">Groq</span>
