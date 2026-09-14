@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -70,20 +70,34 @@ export default function App() {
   const [copiedIndex, setCopiedIndex] = useState(null);
 
   const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     localStorage.setItem('areesha_sessions', JSON.stringify(sessions));
   }, [sessions]);
 
-  const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
-  const messages = activeSession ? activeSession.messages : [];
-  const totalTokens = messages.reduce((acc, m) => acc + estimateTokens(m.content), 0);
+  const activeSession = useMemo(() => {
+    return sessions.find(s => s.id === activeSessionId) || sessions[0] || { id: Date.now(), title: 'Chat', mode: 'qa', messages: [] };
+  }, [sessions, activeSessionId]);
+
+  const messages = activeSession.messages;
+  const totalTokens = useMemo(() => {
+    return messages.reduce((acc, m) => acc + estimateTokens(m.content), 0);
+  }, [messages]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  const createNewSession = (mode = activeMode) => {
+  // Dynamic textarea height adjustment
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 128)}px`;
+    }
+  }, [inputMessage]);
+
+  const createNewSession = useCallback((mode = activeMode) => {
     const newSession = {
       id: Date.now(),
       title: `New ${MODES.find(m => m.id === mode)?.name || 'Chat'}`,
@@ -93,7 +107,7 @@ export default function App() {
     setSessions(prev => [newSession, ...prev]);
     setActiveSessionId(newSession.id);
     setActiveMode(mode);
-  };
+  }, [activeMode]);
 
   const deleteSession = (id, e) => {
     e.stopPropagation();
@@ -114,11 +128,8 @@ export default function App() {
     const text = textToSend.trim();
     if (!text || isLoading) return;
 
-    const userMessage = { 
-      role: 'user', 
-      content: text, 
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-    };
+    const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const userMessage = { role: 'user', content: text, timestamp };
 
     setSessions(prev => prev.map(s => {
       if (s.id === activeSessionId) {
@@ -132,8 +143,8 @@ export default function App() {
     setIsLoading(true);
 
     try {
-      const systemPrompt = `You are a helpful CLI AI assistant operating in "${activeMode}" mode. Provide clear, concise responses using structured markdown tables where appropriate. Whenever you create a table, you MUST include a standard header separator row (e.g., |---|---|) right beneath the column titles so it renders properly as a UI grid instead of raw text pipes. For math expressions, ALWAYS use standard LaTeX math delimiters: use double dollar signs ($$ ... $$) for block/display equations and single dollar signs ($ ... $) for inline math. Do NOT use brackets like \\[ \\] or \\( \\).`;
-      
+      const systemPrompt = `You are a helpful assistant operating in "${activeMode}" mode. Provide concise responses using markdown tables where applicable. Include header separator rows in markdown tables. For standard mathematics, use LaTeX syntax ($...$ or $$...$$).`;
+
       const historyForApi = [
         { role: 'system', content: systemPrompt },
         ...messages.map(m => ({ role: m.role, content: m.content })),
@@ -142,9 +153,7 @@ export default function App() {
 
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: selectedModel,
           messages: historyForApi,
@@ -153,8 +162,8 @@ export default function App() {
       });
 
       if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || errData.detail || `Server error (${response.status})`);
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || errData.detail || `Server status ${response.status}`);
       }
 
       const data = await response.json();
@@ -176,7 +185,7 @@ export default function App() {
       const errorMessage = {
         role: 'assistant',
         isError: true,
-        content: `Error: ${err.message || 'Failed to connect to backend.'}`,
+        content: `Error: ${err.message || 'Failed to connect to API service.'}`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setSessions(prev => prev.map(s => {
@@ -220,9 +229,9 @@ export default function App() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="font-bold text-base tracking-wide">AI assistant</h1>
+                <h1 className="font-bold text-base tracking-wide">AI Assistant</h1>
                 <p className={`text-[11px] ${theme.textSecondary} flex items-center gap-1`}>
-                  Made by <span className="text-cyan-400 font-medium">Areesha Riaz</span> • Powered by <span className="text-cyan-500 font-semibold">Groq</span>
+                  Powered by <span className="text-cyan-500 font-semibold">Groq API</span>
                 </p>
               </div>
             </div>
@@ -311,7 +320,7 @@ export default function App() {
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="font-medium">Vercel API Active</span>
+                <span className="font-medium">Vercel Edge Ready</span>
               </div>
               <button
                 onClick={() => setShowSettings(!showSettings)}
@@ -482,7 +491,7 @@ export default function App() {
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-2xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
                 <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping"></span>
-                <span>Generating answer using Groq...</span>
+                <span>Generating response...</span>
               </div>
             </div>
           )}
@@ -494,6 +503,7 @@ export default function App() {
           <div className="max-w-3xl mx-auto space-y-2">
             <div className={`relative flex items-center ${theme.bgInput} border ${theme.border} focus-within:border-cyan-500 rounded-2xl p-2 transition-all shadow-lg`}>
               <textarea
+                ref={textareaRef}
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyDown={(e) => {
@@ -504,7 +514,7 @@ export default function App() {
                 }}
                 placeholder={`Ask ${MODES.find(m => m.id === activeMode)?.name}... (Press Enter to send)`}
                 rows={1}
-                className={`flex-1 bg-transparent px-3 py-1.5 text-sm ${theme.textPrimary} placeholder-slate-400 focus:outline-none resize-none max-h-32`}
+                className={`flex-1 bg-transparent px-3 py-1.5 text-sm ${theme.textPrimary} placeholder-slate-400 focus:outline-none resize-none overflow-y-auto max-h-32`}
               />
               <button
                 onClick={() => handleSendMessage()}
