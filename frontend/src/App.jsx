@@ -60,40 +60,61 @@ const BowIcon = ({ className = "w-6 h-6" }) => (
   </svg>
 );
 
-// Sparkle Effect Component (Only active during movement, clears instantly on stop)
+// Sparkle Effect Component (Moving trail that fades out smoothly when cursor stops)
 const SparkleEffect = () => {
   const [sparkles, setSparkles] = useState([]);
-  const timeoutRef = useRef(null);
+  const requestRef = useRef(null);
+  const lastPos = useRef({ x: 0, y: 0 });
+  const isMoving = useRef(false);
+  const stopTimeout = useRef(null);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      // Clear previous timeout tracking stop status
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      lastPos.current = { x: e.clientX, y: e.clientY };
+      isMoving.current = true;
 
-      if (Math.random() > 0.25) return;
-      
-      const id = Date.now() + Math.random();
-      const newSparkle = {
-        id,
-        x: e.clientX,
-        y: e.clientY,
-        size: Math.random() * 12 + 8,
-        color: ['#f472b6', '#fb7185', '#e879f9', '#fbcfe8'][Math.floor(Math.random() * 4)],
-        rotation: Math.random() * 360,
-      };
+      if (stopTimeout.current) clearTimeout(stopTimeout.current);
 
-      setSparkles(prev => [...prev.slice(-10), newSparkle]);
+      // Add new sparkle trailing behind cursor
+      if (Math.random() > 0.3) {
+        const id = Date.now() + Math.random();
+        const newSparkle = {
+          id,
+          x: e.clientX + (Math.random() * 20 - 10),
+          y: e.clientY + (Math.random() * 20 - 10),
+          size: Math.random() * 10 + 8,
+          color: ['#f472b6', '#fb7185', '#e879f9', '#fbcfe8'][Math.floor(Math.random() * 4)],
+          opacity: 1,
+          rotation: Math.random() * 360,
+        };
+        setSparkles(prev => [...prev.slice(-12), newSparkle]);
+      }
 
-      // When mouse stops moving for 80ms, clear out all sparkles immediately
-      timeoutRef.current = setTimeout(() => {
-        setSparkles([]);
-      }, 80);
+      // If cursor stops for 100ms, mark as not moving so they fade away
+      stopTimeout.current = setTimeout(() => {
+        isMoving.current = false;
+      }, 100);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+
+    // Animation loop to gradually fade out sparkles when stationary
+    const animate = () => {
+      if (!isMoving.current) {
+        setSparkles(prev => 
+          prev
+            .map(s => ({ ...s, opacity: s.opacity - 0.08 }))
+            .filter(s => s.opacity > 0)
+        );
+      }
+      requestRef.current = requestAnimationFrame(animate);
+    };
+    requestRef.current = requestAnimationFrame(animate);
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      if (stopTimeout.current) clearTimeout(stopTimeout.current);
     };
   }, []);
 
@@ -104,7 +125,7 @@ const SparkleEffect = () => {
       {sparkles.map(sparkle => (
         <div
           key={sparkle.id}
-          className="absolute pointer-events-none transition-opacity duration-75"
+          className="absolute pointer-events-none transition-transform duration-75"
           style={{
             left: `${sparkle.x}px`,
             top: `${sparkle.y}px`,
@@ -112,6 +133,7 @@ const SparkleEffect = () => {
             height: `${sparkle.size}px`,
             transform: `translate(-50%, -50%) rotate(${sparkle.rotation}deg)`,
             color: sparkle.color,
+            opacity: sparkle.opacity,
           }}
         >
           <Sparkles className="w-full h-full drop-shadow-[0_0_6px_rgba(244,114,182,0.8)]" />
@@ -335,7 +357,7 @@ STRICT FORMATTING RULES:
   return (
     <div className={`flex h-screen w-full ${theme.bgMain} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
-      {/* Sparkle cursor effect (Only shows on movement) */}
+      {/* Sparkle cursor effect (Moving trail that fades out when stopped) */}
       <SparkleEffect />
 
       {/* Highly Visible Background Bow Watermarks/Decorations */}
