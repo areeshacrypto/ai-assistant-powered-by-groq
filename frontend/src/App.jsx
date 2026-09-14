@@ -4,7 +4,6 @@ import {
   Bot, User, Copy, Check, Cpu, ChevronRight, ChevronDown, Plus, RefreshCw, Zap, Sun, Moon,
   Menu, X, History, Paperclip, Heart, Sparkles, Star
 } from 'lucide-react';
-import helloKittyLogo from './hellokitty.png';
 
 const MODES = [
   { id: 'qa', name: 'Q&A Assistant', icon: MessageSquare, color: 'from-pink-400 to-rose-400', desc: 'Direct, to-the-point concise answers' },
@@ -296,8 +295,8 @@ STRICT FORMATTING RULES:
           
           <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
             <div className="flex items-center space-x-3">
-              <div className="p-1 bg-slate-800 border border-slate-700 rounded-xl shadow-sm flex items-center justify-center">
-                <img src={helloKittyLogo} alt="Logo" className="w-6 h-6 object-contain" />
+              <div className="p-2 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-xl shadow-sm flex items-center justify-center">
+                <Sparkles className="w-5 h-5" />
               </div>
               <h1 className="font-bold text-base tracking-wide bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">Nova AI</h1>
             </div>
@@ -465,8 +464,8 @@ STRICT FORMATTING RULES:
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-4">
               <div className={`p-4 ${theme.bgCard} border ${theme.border} rounded-2xl shadow-sm`}>
-                <div className="p-2 bg-slate-800 border border-slate-700 rounded-xl inline-flex">
-                  <img src={helloKittyLogo} alt="Logo" className="w-8 h-8 object-contain" />
+                <div className="p-3 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-xl inline-flex shadow-sm">
+                  <Sparkles className="w-6 h-6" />
                 </div>
               </div>
               <div>
@@ -491,7 +490,7 @@ STRICT FORMATTING RULES:
               <div key={index} className={`flex gap-3 sm:gap-4 max-w-3xl mx-auto ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'assistant' && (
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${msg.isError ? 'bg-rose-500/10 border-rose-500 text-rose-500' : `${theme.bgCard} ${theme.border}`}`}>
-                    <img src={helloKittyLogo} alt="Logo" className="w-4 h-4 object-contain" />
+                    <Sparkles className="w-4 h-4 text-pink-400" />
                   </div>
                 )}
                 <div className={`group relative max-w-[90%] sm:max-w-[85%] rounded-2xl p-3.5 sm:p-4 text-sm leading-relaxed border ${
@@ -529,7 +528,7 @@ STRICT FORMATTING RULES:
           {isLoading && (
             <div className="flex gap-4 max-w-3xl mx-auto items-center">
               <div className={`w-8 h-8 rounded-xl ${theme.bgCard} border ${theme.border} flex items-center justify-center`}>
-                <img src={helloKittyLogo} alt="Logo" className="w-4 h-4 object-contain" />
+                <Sparkles className="w-4 h-4 text-pink-400" />
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
                 <span className="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
