@@ -16,7 +16,6 @@ env/
 # Build Outputs
 dist/
 dist-ssr/
-frontend/
 frontend/dist/
 frontend/dist-ssr/
 
