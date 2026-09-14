@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { 
   MessageSquare, FileText, Calculator, Lightbulb, Settings, Trash2, Send, 
-  Bot, User, Copy, Check, Cpu, ChevronRight, Plus, RefreshCw, Zap, Sparkles, Sun, Moon,
-  Menu, X
+  Bot, User, Copy, Check, Cpu, ChevronRight, ChevronDown, Plus, RefreshCw, Zap, Sparkles, Sun, Moon,
+  Menu, X, History
 } from 'lucide-react';
 
 const MODES = [
@@ -75,13 +75,20 @@ export default function App() {
   const [activeMode, setActiveMode] = useState('qa');
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isHistoryVisible, setIsHistoryVisible] = useState(true);
 
+  // Load saved chat sessions directly from localStorage on load (0 tokens used on reload)
   const [sessions, setSessions] = useState(() => {
     const saved = localStorage.getItem('areesha_sessions');
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+      try { 
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) { 
+        console.error("Failed to parse history from localStorage:", e); 
+      }
     }
-    return [{ id: Date.now(), title: 'Initial Chat Session', mode: 'qa', messages: [] }];
+    return [{ id: Date.now(), title: 'New Chat', mode: 'qa', messages: [] }];
   });
 
   const [activeSessionId, setActiveSessionId] = useState(() => sessions[0]?.id || Date.now());
@@ -93,15 +100,17 @@ export default function App() {
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
 
+  // Sync sessions state to localStorage
   useEffect(() => {
     localStorage.setItem('areesha_sessions', JSON.stringify(sessions));
   }, [sessions]);
 
   const activeSession = useMemo(() => {
-    return sessions.find(s => s.id === activeSessionId) || sessions[0] || { id: Date.now(), title: 'Chat', mode: 'qa', messages: [] };
+    return sessions.find(s => s.id === activeSessionId) || sessions[0] || { id: Date.now(), title: 'New Chat', mode: 'qa', messages: [] };
   }, [sessions, activeSessionId]);
 
   const messages = activeSession.messages;
+  
   const totalTokens = useMemo(() => {
     return messages.reduce((acc, m) => acc + estimateTokens(m.content), 0);
   }, [messages]);
@@ -117,10 +126,11 @@ export default function App() {
     }
   }, [inputMessage]);
 
+  // Creates a brand new separate tab in history
   const createNewSession = useCallback((mode = activeMode) => {
     const newSession = {
       id: Date.now(),
-      title: `New ${MODES.find(m => m.id === mode)?.name || 'Chat'}`,
+      title: 'New Chat',
       mode: mode,
       messages: []
     };
@@ -130,6 +140,7 @@ export default function App() {
     setIsMobileMenuOpen(false);
   }, [activeMode]);
 
+  // Permanently delete a session from history
   const deleteSession = (id, e) => {
     e.stopPropagation();
     const updated = sessions.filter(s => s.id !== id);
@@ -152,6 +163,7 @@ export default function App() {
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const userMessage = { role: 'user', content: text, timestamp };
 
+    // Keeps all queries within the SAME active session tab
     setSessions(prev => prev.map(s => {
       if (s.id === activeSessionId) {
         const title = s.messages.length === 0 ? (text.length > 25 ? text.substring(0, 25) + '...' : text) : s.title;
@@ -267,6 +279,8 @@ STRICT FORMATTING RULES:
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         <div className="flex flex-col h-full overflow-hidden">
+          
+          {/* Header & New Chat Button */}
           <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-xl shadow-lg shadow-cyan-500/20">
@@ -280,7 +294,7 @@ STRICT FORMATTING RULES:
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => createNewSession()}
-                className={`p-2 hover:${theme.bgCard} rounded-lg ${theme.textSecondary} transition-colors`}
+                className={`p-2 hover:${theme.bgCard} rounded-lg ${theme.textSecondary} hover:text-cyan-400 transition-colors`}
                 title="New Chat"
               >
                 <Plus className="w-5 h-5" />
@@ -294,6 +308,7 @@ STRICT FORMATTING RULES:
             </div>
           </div>
 
+          {/* Mode Selection */}
           <div className={`p-4 border-b ${theme.border}`}>
             <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} mb-2 block`}>
               Assistant Mode
@@ -329,45 +344,70 @@ STRICT FORMATTING RULES:
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-1">
+          {/* New Chat Trigger Button above History */}
+          <div className="p-4 pb-2">
+            <button
+              onClick={() => createNewSession()}
+              className="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl border border-dashed border-cyan-500/40 hover:border-cyan-500 text-cyan-400 hover:bg-cyan-500/10 text-xs font-semibold transition-all"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Start New Chat</span>
+            </button>
+          </div>
+
+          {/* History Section */}
+          <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1">
             <div className="flex items-center justify-between mb-2 px-1">
-              <span className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary}`}>
-                Recent Sessions
-              </span>
+              <button 
+                onClick={() => setIsHistoryVisible(!isHistoryVisible)}
+                className={`flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} hover:text-cyan-400 transition-colors`}
+              >
+                <History className="w-3.5 h-3.5" />
+                <span>History</span>
+                {isHistoryVisible ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+              </button>
               <span className={`text-[10px] ${theme.bgCard} px-2 py-0.5 rounded-full ${theme.textSecondary}`}>
                 {sessions.length}
               </span>
             </div>
 
-            {sessions.map(s => (
-              <div
-                key={s.id}
-                onClick={() => {
-                  setActiveSessionId(s.id);
-                  setActiveMode(s.mode || 'qa');
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`group flex items-center justify-between p-2.5 rounded-xl cursor-pointer text-sm transition-all border ${
-                  s.id === activeSessionId
-                    ? `${theme.bgCard} border-slate-400/30 text-cyan-500 font-medium`
-                    : `bg-transparent border-transparent ${theme.textSecondary}`
-                }`}
-              >
-                <div className="flex items-center space-x-2.5 truncate">
-                  <MessageSquare className="w-4 h-4 shrink-0" />
-                  <span className="truncate text-xs">{s.title}</span>
-                </div>
-                <button
-                  onClick={(e) => deleteSession(s.id, e)}
-                  className="opacity-0 group-hover:opacity-100 p-1 rounded hover:text-rose-500 transition-all"
-                  title="Delete Chat"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+            {/* Collapsible History Tabs */}
+            {isHistoryVisible && (
+              <div className="space-y-1">
+                {sessions.map(s => (
+                  <div
+                    key={s.id}
+                    onClick={() => {
+                      setActiveSessionId(s.id);
+                      setActiveMode(s.mode || 'qa');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`group flex items-center justify-between p-2.5 rounded-xl cursor-pointer text-sm transition-all border ${
+                      s.id === activeSessionId
+                        ? `${theme.bgCard} border-cyan-500/40 text-cyan-400 font-medium shadow-sm`
+                        : `bg-transparent border-transparent ${theme.textSecondary} hover:${theme.bgCard}`
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2.5 truncate">
+                      <MessageSquare className="w-4 h-4 shrink-0" />
+                      <span className="truncate text-xs">{s.title}</span>
+                    </div>
+                    
+                    {/* Delete Permanently Button */}
+                    <button
+                      onClick={(e) => deleteSession(s.id, e)}
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:text-rose-500 hover:bg-rose-500/10 transition-all"
+                      title="Delete Permanently"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
 
+          {/* Footer Info */}
           <div className={`p-4 border-t ${theme.border} space-y-3`}>
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
@@ -389,7 +429,7 @@ STRICT FORMATTING RULES:
         </div>
       </aside>
 
-      {/* Main Container */}
+      {/* Main Chat Container */}
       <main className="flex-1 flex flex-col h-full relative overflow-hidden">
         <header className={`h-16 border-b ${theme.border} ${theme.bgHeader} backdrop-blur px-4 md:px-6 flex items-center justify-between z-10`}>
           <div className="flex items-center space-x-3">
@@ -457,7 +497,7 @@ STRICT FORMATTING RULES:
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(prompt)}
-                    className={`w-full text-left p-3 rounded-xl ${theme.bgCard} border ${theme.border} text-xs transition-all flex items-center justify-between group`}
+                    className={`w-full text-left p-3 rounded-xl ${theme.bgCard} border ${theme.border} text-xs transition-all flex items-center justify-between group hover:border-cyan-500/50`}
                   >
                     <span>"{prompt}"</span>
                     <ChevronRight className="w-4 h-4 text-cyan-500" />
