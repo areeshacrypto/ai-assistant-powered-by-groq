@@ -644,7 +644,7 @@ STRICT FORMATTING RULES:
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
                 <span className="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
-                <span>Nova is thinking...</span>
+                <span>Sparkle ur thoughts here...</span>
               </div>
             </div>
           )}
@@ -687,7 +687,7 @@ STRICT FORMATTING RULES:
                     handleSendMessage();
                   }
                 }}
-                placeholder="Ask Nova anything..."
+                placeholder="Sparkle ur thoughts here..."
                 rows={1}
                 className={`flex-1 bg-transparent px-2 py-1.5 text-sm ${theme.textPrimary} placeholder-pink-300/40 focus:outline-none resize-none overflow-y-auto max-h-32`}
               />
