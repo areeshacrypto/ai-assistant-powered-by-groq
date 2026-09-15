@@ -6,13 +6,13 @@ import {
 } from 'lucide-react';
 
 // ==========================================
-// 🎨 YOUR LOCAL PNG BACKGROUND SETUP
+// 🎨 YOUR LOCAL JPEG BACKGROUND SETUP
 // ==========================================
-// 1. Put your PNG file in the same folder as this code file.
-// 2. Change './my-background.png' below to match your actual PNG filename.
-import myCustomPngBg from './my-background.jpeg';
+// Make sure your file is named 'my-background.jpeg' (or update it below) 
+// and placed right inside your 'src/' folder next to App.jsx.
+import myCustomJpegBg from './my-background.jpeg';
 
-const SPIDERMAN_CUSTOM_BG = myCustomPngBg; 
+const SPIDERMAN_CUSTOM_BG = myCustomJpegBg; 
 
 const THEMES = {
   dark: {
@@ -106,7 +106,7 @@ const BowIcon = ({ className = "w-6 h-6" }) => (
   </svg>
 );
 
-// Dynamic Background Component using your PNG
+// Dynamic Background Component using your JPEG
 const ThemeBackground = ({ themeKey }) => {
   if (themeKey === 'spiderman') {
     return (
@@ -118,11 +118,11 @@ const ThemeBackground = ({ themeKey }) => {
           />
         ) : (
           <div className="absolute inset-0 bg-black flex items-center justify-center text-pink-500 text-xs font-mono p-4 text-center">
-            [⚠️ Please check your PNG image import path at the top of the file!]
+            [⚠️ Please check your JPEG image import path at the top of the file!]
           </div>
         )}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
-        <div className="absolute top-12 left-16 text-pink-500/50 text-3xl animate-pulse">🕷️</div>
+        <div className="absolute top-12 left-20 text-pink-500/50 text-3xl animate-pulse">🕷️</div>
         <div className="absolute bottom-24 right-20 text-pink-400/40 text-4xl">🕸️</div>
       </div>
     );
@@ -252,7 +252,7 @@ export default function App() {
   const [selectedModel, setSelectedModel] = useState('qwen/qwen3-32b');
   const [maxTokens, setMaxTokens] = useState(500);
   const [activeMode, setActiveMode] = useState('qa');
-  const [currentThemeKey, setCurrentThemeKey] = useState('spiderman'); // Default to spiderman theme to show PNG instantly
+  const [currentThemeKey, setCurrentThemeKey] = useState('spiderman'); 
   const theme = THEMES[currentThemeKey] || THEMES.dark;
   const isSpiderman = currentThemeKey === 'spiderman';
 
@@ -464,9 +464,23 @@ STRICT FORMATTING RULES:
         <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-black/80 backdrop-blur-sm z-30 md:hidden" />
       )}
 
-      {/* Sidebar */}
-      <aside className={`fixed md:relative inset-y-0 left-0 z-40 w-80 ${theme.bgSidebar} border-r ${theme.border} flex flex-col justify-between shrink-0 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-        <div className="flex flex-col h-full overflow-hidden">
+      {/* Sidebar with Random Scattered Spider Webs */}
+      <aside className={`fixed md:relative inset-y-0 left-0 z-40 w-80 ${theme.bgSidebar} border-r ${theme.border} flex flex-col justify-between shrink-0 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} overflow-hidden`}>
+        
+        {/* Random Scattered Spider Webs & Spiders Overlay */}
+        {isSpiderman && (
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-35 select-none">
+            <span className="absolute top-[14%] left-[6%] text-pink-500 text-lg rotate-[-15deg]">🕸️</span>
+            <span className="absolute top-[28%] left-[82%] text-pink-400 text-sm rotate-[45deg]">🕷️</span>
+            <span className="absolute top-[45%] left-[12%] text-pink-500 text-2xl rotate-[30deg]">🕸️</span>
+            <span className="absolute top-[62%] left-[75%] text-pink-300 text-base rotate-[-30deg]">🕸️</span>
+            <span className="absolute top-[80%] left-[20%] text-pink-500 text-sm rotate-[12deg]">🕷️</span>
+            <span className="absolute top-[90%] left-[85%] text-pink-400 text-xl rotate-[-45deg]">🕸️</span>
+            <span className="absolute top-[5%] left-[65%] text-pink-500 text-sm rotate-[60deg]">🕸️</span>
+          </div>
+        )}
+
+        <div className="flex flex-col h-full overflow-hidden relative z-10">
           
           <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
             <div className="flex items-center space-x-3">
@@ -725,7 +739,7 @@ STRICT FORMATTING RULES:
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar & Footer with "Made by Areesha Riaz" */}
+        {/* Input Bar & Footer */}
         <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur-md`}>
           <div className="max-w-3xl mx-auto space-y-2">
             
@@ -775,7 +789,7 @@ STRICT FORMATTING RULES:
               </button>
             </div>
 
-            {/* Footer containing Made by Areesha Riaz (size set to text-[12px]) */}
+            {/* Footer with Made by Areesha Riaz */}
             <div className="flex items-center justify-between px-2 text-[12px]">
               <span className={theme.textSecondary}>Enter to send, Shift+Enter for newline</span>
               <span className="font-semibold flex items-center gap-1">
