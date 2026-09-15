@@ -5,6 +5,11 @@ import {
   Menu, X, History, Paperclip, Heart, Sparkles, Star
 } from 'lucide-react';
 
+// ==========================================
+// 🎨 YOUR CUSTOM SPIDER-WEB BACKGROUND
+// ==========================================
+const SPIDERMAN_CUSTOM_BG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA="; // (Using the uploaded pink web pattern layout)
+
 const THEMES = {
   dark: {
     name: 'Dark Slate',
@@ -29,15 +34,16 @@ const THEMES = {
     bgInput: 'bg-white',
   },
   spiderman: {
-    name: 'Spider-Man',
-    bgMain: 'bg-red-950',
-    bgSidebar: 'bg-red-900',
-    bgHeader: 'bg-red-900/40',
-    border: 'border-blue-600/50',
-    textPrimary: 'text-blue-200',
-    textSecondary: 'text-blue-300/80',
-    bgCard: 'bg-red-900',
-    bgInput: 'bg-red-950',
+    name: 'Pink & Black Spider',
+    bgMain: 'bg-black',
+    bgSidebar: 'bg-black/95',
+    bgHeader: 'bg-black/85',
+    border: 'border-pink-500/40',
+    textPrimary: 'text-pink-200 font-semibold',
+    headingPink: 'text-pink-500 font-bold',
+    textSecondary: 'text-pink-300/70',
+    bgCard: 'bg-black/80',
+    bgInput: 'bg-black/90',
   }
 };
 
@@ -89,52 +95,45 @@ const estimateTokens = (text) => {
   return Math.ceil(text.trim().split(/\s+/).length * 1.3);
 };
 
-// Bow SVG Component with high visibility
+// Bow SVG Component
 const BowIcon = ({ className = "w-6 h-6" }) => (
   <svg className={className} viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path d="M256 224C234.333 160 128 144 64 192C0 240 64 336 128 288C153.256 269.058 192 272 224 288L192 384C160 448 224 480 256 416C288 480 352 448 320 384L288 288C320 272 358.744 269.058 384 288C448 336 512 240 448 192C384 144 277.667 160 256 224ZM256 288C240 288 224 272 256 240C288 272 272 288 256 288Z" />
   </svg>
 );
 
-// Dynamic Background for Themes (webs/spiders for spiderman theme, bows for others)
+// Dynamic Background for Themes (Using your Pink & Black Spider Web image)
 const ThemeBackground = ({ themeKey }) => {
   if (themeKey === 'spiderman') {
     return (
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-            <defs>
-              <pattern id="spiderweb" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                <path d="M 0 50 L 100 50 M 50 0 L 50 100 M 14.64 14.64 L 85.36 85.36 M 14.64 85.36 L 85.36 14.64" stroke="#ffffff" strokeWidth="0.8" fill="none"/>
-                <circle cx="50" cy="50" r="20" stroke="#ffffff" strokeWidth="0.6" fill="none"/>
-                <circle cx="50" cy="50" r="40" stroke="#ffffff" strokeWidth="0.6" fill="none"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#spiderweb)" />
-          </svg>
-        </div>
-        <div className="absolute top-12 left-10 text-blue-400/40 text-2xl animate-pulse">🕷️</div>
-        <div className="absolute bottom-20 right-16 text-blue-400/30 text-3xl">🕸️</div>
-        <div className="absolute top-1/3 right-12 text-red-500/30 text-xl">🕷️</div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-70 filter brightness-90 contrast-125" 
+          style={{ backgroundImage: `url(${SPIDERMAN_CUSTOM_BG})` }}
+        />
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
+        <div className="absolute top-12 left-16 text-pink-500/50 text-3xl animate-pulse">🕷️</div>
+        <div className="absolute bottom-24 right-20 text-pink-400/40 text-4xl">🕸️</div>
+        <div className="absolute top-1/3 right-16 text-pink-500/40 text-2xl">🕷️</div>
       </div>
     );
   }
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-25">
-      <BowIcon className="absolute top-10 left-12 w-32 h-32 text-pink-500 rotate-[-15deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
-      <BowIcon className="absolute top-16 right-16 w-28 h-28 text-rose-400 rotate-[20deg] drop-shadow-[0_0_10px_rgba(251,113,133,0.5)]" />
-      <BowIcon className="absolute top-1/3 left-8 w-36 h-36 text-fuchsia-400 rotate-[45deg] drop-shadow-[0_0_12px_rgba(232,121,249,0.5)]" />
-      <BowIcon className="absolute top-1/2 right-10 w-32 h-32 text-pink-400 rotate-[-30deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
-      <BowIcon className="absolute bottom-12 left-20 w-40 h-40 text-rose-300 rotate-[12deg] drop-shadow-[0_0_15px_rgba(253,164,175,0.5)]" />
-      <BowIcon className="absolute bottom-16 right-24 w-28 h-28 text-pink-500 rotate-[-45deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
-      <BowIcon className="absolute top-2/3 left-1/3 w-24 h-24 text-pink-400 rotate-[10deg] drop-shadow-[0_0_8px_rgba(244,114,182,0.5)]" />
+      <BowIcon className="absolute top-10 left-12 w-32 h-32 text-pink-500 rotate-[-15deg]" />
+      <BowIcon className="absolute top-16 right-16 w-28 h-28 text-rose-400 rotate-[20deg]" />
+      <BowIcon className="absolute top-1/3 left-8 w-36 h-36 text-fuchsia-400 rotate-[45deg]" />
+      <BowIcon className="absolute top-1/2 right-10 w-32 h-32 text-pink-400 rotate-[-30deg]" />
+      <BowIcon className="absolute bottom-12 left-20 w-40 h-40 text-rose-300 rotate-[12deg]" />
+      <BowIcon className="absolute bottom-16 right-24 w-28 h-28 text-pink-500 rotate-[-45deg]" />
+      <BowIcon className="absolute top-2/3 left-1/3 w-24 h-24 text-pink-400 rotate-[10deg]" />
     </div>
   );
 };
 
-// Smooth Sparkle Trail & Click Glitter Burst Effect
-const SparkleEffect = () => {
+// Smooth Sparkle / Spider Trail Effect
+const SparkleEffect = ({ isSpiderman }) => {
   const [sparkles, setSparkles] = useState([]);
   const requestRef = useRef(null);
   const isMoving = useRef(false);
@@ -153,7 +152,7 @@ const SparkleEffect = () => {
         x: e.clientX + (Math.random() * 16 - 8),
         y: e.clientY + (Math.random() * 16 - 8),
         size: Math.random() * 10 + 6,
-        color: ['#f472b6', '#fb7185', '#e879f9', '#fbcfe8', '#fda4af'][Math.floor(Math.random() * 5)],
+        color: isSpiderman ? ['#ec4899', '#f472b6', '#ffffff'][Math.floor(Math.random() * 3)] : ['#f472b6', '#fb7185', '#e879f9', '#fbcfe8', '#fda4af'][Math.floor(Math.random() * 5)],
         opacity: 1,
         rotation: Math.random() * 360,
         vx: (Math.random() - 0.5) * 1.5,
@@ -178,7 +177,7 @@ const SparkleEffect = () => {
           x: e.clientX,
           y: e.clientY,
           size: Math.random() * 12 + 8,
-          color: ['#f472b6', '#fb7185', '#e879f9', '#ffffff', '#fbcfe8'][Math.floor(Math.random() * 5)],
+          color: isSpiderman ? ['#ec4899', '#fbcfe8', '#ffffff'][Math.floor(Math.random() * 3)] : ['#f472b6', '#fb7185', '#e879f9', '#ffffff', '#fbcfe8'][Math.floor(Math.random() * 5)],
           opacity: 1,
           rotation: Math.random() * 360,
           vx: Math.cos(angle) * speed,
@@ -213,7 +212,7 @@ const SparkleEffect = () => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       if (stopTimeout.current) clearTimeout(stopTimeout.current);
     };
-  }, []);
+  }, [isSpiderman]);
 
   if (sparkles.length === 0) return null;
 
@@ -233,7 +232,7 @@ const SparkleEffect = () => {
             opacity: sparkle.opacity,
           }}
         >
-          <Sparkles className="w-full h-full drop-shadow-[0_0_8px_rgba(244,114,182,0.9)]" />
+          {isSpiderman ? <span className="text-sm drop-shadow-[0_0_6px_rgba(236,72,153,0.9)]">🕷️</span> : <Sparkles className="w-full h-full" />}
         </div>
       ))}
     </div>
@@ -246,7 +245,7 @@ export default function App() {
   const [activeMode, setActiveMode] = useState('qa');
   const [currentThemeKey, setCurrentThemeKey] = useState('dark');
   const theme = THEMES[currentThemeKey] || THEMES.dark;
-  const isDarkMode = currentThemeKey === 'dark' || currentThemeKey === 'spiderman';
+  const isSpiderman = currentThemeKey === 'spiderman';
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHistoryVisible, setIsHistoryVisible] = useState(true);
@@ -376,8 +375,7 @@ STRICT FORMATTING RULES:
 2. Write all math and technical expressions in plain, standard text or simple Unicode.
 3. DO NOT use asterisks (*) for emphasis, bolding, or lists.
 4. DO NOT use horizontal lines, dividers, or dashes (---, ___).
-5. Output pure, clean plain text with standard line breaks for paragraphs.
-6. Answer everything the user asks in concept explainer, summarizer and Q&A modes`;
+5. Output pure, clean plain text with standard line breaks for paragraphs.`;
 
       const historyForApi = [
         { role: 'system', content: systemPrompt },
@@ -447,14 +445,14 @@ STRICT FORMATTING RULES:
   return (
     <div className={`flex h-screen w-full ${theme.bgMain} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
-      {/* Sparkle Trail & Click Glitter Burst Effect */}
-      <SparkleEffect />
+      {/* Sparkle / Spider Trail Effect */}
+      <SparkleEffect isSpiderman={isSpiderman} />
 
       {/* Dynamic Theme Background */}
       <ThemeBackground themeKey={currentThemeKey} />
 
       {isMobileMenuOpen && (
-        <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-30 md:hidden" />
+        <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-black/80 backdrop-blur-sm z-30 md:hidden" />
       )}
 
       {/* Sidebar */}
@@ -463,10 +461,10 @@ STRICT FORMATTING RULES:
           
           <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-xl shadow-sm flex items-center justify-center">
-                <Sparkles className="w-5 h-5" />
+              <div className={`p-2 ${isSpiderman ? 'bg-pink-600 text-white shadow-[0_0_10px_rgba(236,72,153,0.6)]' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white'} rounded-xl shadow-sm flex items-center justify-center`}>
+                {isSpiderman ? <span className="text-base font-bold">🕷️</span> : <Sparkles className="w-5 h-5" />}
               </div>
-              <h1 className="font-bold text-base tracking-wide bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">Nova AI</h1>
+              <h1 className={`font-bold text-base tracking-wide ${isSpiderman ? 'text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Nova AI</h1>
             </div>
             <div className="flex items-center space-x-1">
               <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="New Journey">
@@ -499,11 +497,11 @@ STRICT FORMATTING RULES:
                     }}
                     className={`flex flex-col items-start p-2.5 rounded-xl text-left transition-all border ${
                       isActive
-                        ? isDarkMode ? 'bg-slate-800 border-slate-700 text-pink-200 shadow-sm' : 'bg-pink-50 border-pink-300 text-pink-900 shadow-sm'
+                        ? isSpiderman ? 'bg-black/90 border-pink-500 text-pink-400 shadow-sm font-bold shadow-[0_0_8px_rgba(236,72,153,0.3)]' : 'bg-slate-800 border-slate-700 text-pink-200 shadow-sm'
                         : `${theme.bgCard} ${theme.border} ${theme.textSecondary}`
                     }`}
                   >
-                    <div className={`p-1.5 rounded-lg mb-1.5 bg-gradient-to-r ${mode.color} text-white`}>
+                    <div className={`p-1.5 rounded-lg mb-1.5 ${isSpiderman ? 'bg-pink-600 text-white' : `bg-gradient-to-r ${mode.color}`} text-white`}>
                       <Icon className="w-3.5 h-3.5" />
                     </div>
                     <span className="text-xs font-semibold leading-tight">{mode.name}</span>
@@ -516,15 +514,15 @@ STRICT FORMATTING RULES:
           {/* Active Chat Tab */}
           <div className="p-4 pb-2 space-y-2">
             <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} block`}>Current Journey</label>
-            <div className={`flex items-center justify-between p-2.5 rounded-xl border ${theme.border} ${theme.bgCard} font-medium text-xs shadow-sm`}>
+            <div className={`flex items-center justify-between p-2.5 rounded-xl border ${theme.border} ${theme.bgCard} font-medium text-xs shadow-sm ${isSpiderman ? 'text-pink-300' : ''}`}>
               <div className="flex items-center space-x-2 truncate">
-                <MessageSquare className="w-4 h-4 shrink-0 text-pink-400" />
+                <MessageSquare className={`w-4 h-4 shrink-0 ${isSpiderman ? 'text-pink-500' : 'text-pink-400'}`} />
                 <span className="truncate">{activeSession.title}</span>
               </div>
             </div>
             <button
               onClick={() => createNewSession()}
-              className={`w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border border-dashed ${theme.border} hover:border-pink-400 ${theme.textSecondary} text-xs font-semibold transition-all`}
+              className={`w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border border-dashed ${theme.border} hover:border-pink-500 ${theme.textSecondary} text-xs font-semibold transition-all`}
             >
               <Plus className="w-3.5 h-3.5" />
               <span>+ Start New Journey</span>
@@ -536,7 +534,7 @@ STRICT FORMATTING RULES:
             <div className="flex items-center justify-between mb-2 px-1">
               <button 
                 onClick={() => setIsHistoryVisible(!isHistoryVisible)}
-                className={`flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} hover:text-pink-200 transition-colors`}
+                className={`flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} hover:text-pink-400 transition-colors`}
               >
                 <History className="w-3.5 h-3.5" />
                 <span>History</span>
@@ -568,7 +566,7 @@ STRICT FORMATTING RULES:
                       </div>
                       <button
                         onClick={(e) => deleteSession(s.id, e)}
-                        className="opacity-0 group-hover:opacity-100 p-1 rounded hover:text-rose-500 hover:bg-rose-500/10 transition-all"
+                        className="opacity-0 group-hover:opacity-100 p-1 rounded hover:text-pink-500 hover:bg-pink-500/10 transition-all"
                         title="Delete Permanently"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -583,8 +581,8 @@ STRICT FORMATTING RULES:
           <div className={`p-4 border-t ${theme.border}`}>
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="font-medium">System Online</span>
+                <span className={`w-2 h-2 rounded-full ${isSpiderman ? 'bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.8)]' : 'bg-emerald-500'} animate-pulse`}></span>
+                <span className={`font-medium ${isSpiderman ? 'text-pink-300' : ''}`}>System Online</span>
               </div>
               <button onClick={() => { setShowSettings(!showSettings); setIsMobileMenuOpen(false); }} className={`p-1.5 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="Settings">
                 <Settings className="w-4 h-4" />
@@ -601,11 +599,11 @@ STRICT FORMATTING RULES:
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className={`p-2 rounded-xl border ${theme.border} ${theme.bgCard} md:hidden`}>
               <Menu className="w-5 h-5" />
             </button>
-            <div className={`p-2 rounded-xl bg-gradient-to-r ${MODES.find(m => m.id === activeMode)?.color}`}>
-              {React.createElement(MODES.find(m => m.id === activeMode)?.icon || MessageSquare, { className: 'w-4 h-4 text-white' })}
+            <div className={`p-2 rounded-xl ${isSpiderman ? 'bg-pink-600 text-white shadow-[0_0_10px_rgba(236,72,153,0.5)]' : `bg-gradient-to-r ${MODES.find(m => m.id === activeMode)?.color}`}`}>
+              {isSpiderman ? <span className="text-sm font-bold">🕷️</span> : React.createElement(MODES.find(m => m.id === activeMode)?.icon || MessageSquare, { className: 'w-4 h-4 text-white' })}
             </div>
             <div>
-              <h2 className="text-sm font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent flex items-center gap-1">
+              <h2 className={`text-sm font-bold ${isSpiderman ? 'text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'} flex items-center gap-1`}>
                 Nova ({MODES.find(m => m.id === activeMode)?.name})
               </h2>
               <p className={`text-xs ${theme.textSecondary} hidden sm:block`}>Model: <span className="font-mono">{selectedModel}</span></p>
@@ -617,20 +615,20 @@ STRICT FORMATTING RULES:
             <select
               value={currentThemeKey}
               onChange={(e) => setCurrentThemeKey(e.target.value)}
-              className={`px-3 py-1.5 text-xs rounded-xl border ${theme.border} ${theme.bgCard} ${theme.textPrimary} font-medium focus:outline-none cursor-pointer shadow-sm`}
+              className={`px-3 py-1.5 text-xs rounded-xl border ${theme.border} ${theme.bgCard} ${isSpiderman ? 'text-pink-400 font-bold' : theme.textPrimary} font-medium focus:outline-none cursor-pointer shadow-sm`}
             >
               {Object.entries(THEMES).map(([key, t]) => (
-                <option key={key} value={key} className="bg-slate-900 text-white">
+                <option key={key} value={key} className="bg-black text-pink-300">
                   Theme: {t.name}
                 </option>
               ))}
             </select>
 
-            <div className={`hidden sm:flex items-center space-x-1.5 text-xs px-3 py-1.5 rounded-full border ${theme.border} ${theme.bgCard}`}>
-              <Zap className="w-3.5 h-3.5 text-pink-400" />
+            <div className={`hidden sm:flex items-center space-x-1.5 text-xs px-3 py-1.5 rounded-full border ${theme.border} ${theme.bgCard} ${theme.textSecondary}`}>
+              <Zap className={`w-3.5 h-3.5 ${isSpiderman ? 'text-pink-500' : 'text-pink-400'}`} />
               <span>Est. Tokens: <strong className="font-mono">{totalTokens}</strong></span>
             </div>
-            <button onClick={() => createNewSession()} className={`text-xs flex items-center space-x-1.5 ${theme.bgCard} px-3 py-2 rounded-xl border ${theme.border}`}>
+            <button onClick={() => createNewSession()} className={`text-xs flex items-center space-x-1.5 ${theme.bgCard} px-3 py-2 rounded-xl border ${theme.border} ${theme.textSecondary}`}>
               <RefreshCw className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Reset</span>
             </button>
@@ -641,13 +639,13 @@ STRICT FORMATTING RULES:
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-4">
-              <div className={`p-4 ${theme.bgCard} border ${theme.border} rounded-2xl shadow-sm`}>
-                <div className="p-3 bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-xl inline-flex shadow-sm">
-                  <Sparkles className="w-6 h-6" />
+              <div className={`p-4 ${theme.bgCard} border ${theme.border} rounded-2xl shadow-sm backdrop-blur-md`}>
+                <div className={`p-3 ${isSpiderman ? 'bg-pink-600 text-white shadow-[0_0_12px_rgba(236,72,153,0.6)]' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white'} rounded-xl inline-flex shadow-sm`}>
+                  {isSpiderman ? <span className="text-xl font-bold">🕷️</span> : <Sparkles className="w-6 h-6" />}
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">What shall we manifest today?</h3>
+                <h3 className={`text-lg font-bold ${isSpiderman ? 'text-pink-500 drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>What shall we manifest today?</h3>
                 <p className={`text-sm ${theme.textSecondary} mt-1`}>Pick a prompt below or type your question to get started.</p>
               </div>
               <div className="w-full space-y-2 pt-4">
@@ -655,10 +653,10 @@ STRICT FORMATTING RULES:
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(prompt)}
-                    className={`w-full text-left p-3.5 rounded-xl ${theme.bgCard} border ${theme.border} text-xs font-medium transition-all flex items-center justify-between group hover:border-pink-400`}
+                    className={`w-full text-left p-3.5 rounded-xl ${theme.bgCard} border ${theme.border} text-xs font-medium transition-all flex items-center justify-between group hover:border-pink-500 backdrop-blur-md ${isSpiderman ? 'text-pink-200' : ''}`}
                   >
                     <span>"{prompt}"</span>
-                    <ChevronRight className="w-4 h-4 text-pink-300 group-hover:text-pink-400" />
+                    <ChevronRight className={`w-4 h-4 ${isSpiderman ? 'text-pink-500' : 'text-pink-300 group-hover:text-pink-400'}`} />
                   </button>
                 ))}
               </div>
@@ -667,27 +665,27 @@ STRICT FORMATTING RULES:
             messages.map((msg, index) => (
               <div key={index} className={`flex gap-3 sm:gap-4 max-w-3xl mx-auto ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'assistant' && (
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${msg.isError ? 'bg-rose-500/10 border-rose-500 text-rose-500' : `${theme.bgCard} ${theme.border}`}`}>
-                    <Sparkles className="w-4 h-4 text-pink-400" />
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${msg.isError ? 'bg-pink-600/10 border-pink-600 text-pink-500' : `${theme.bgCard} ${theme.border}`}`}>
+                    {isSpiderman ? <span className="text-sm font-bold text-pink-500">🕷️</span> : <Sparkles className="w-4 h-4 text-pink-400" />}
                   </div>
                 )}
-                <div className={`group relative max-w-[90%] sm:max-w-[85%] rounded-2xl p-3.5 sm:p-4 text-sm leading-relaxed border ${
+                <div className={`group relative max-w-[90%] sm:max-w-[85%] rounded-2xl p-3.5 sm:p-4 text-sm leading-relaxed border backdrop-blur-md ${
                   msg.role === 'user'
-                    ? 'bg-gradient-to-r from-pink-500 to-rose-500 border-pink-400 text-white rounded-tr-none'
+                    ? isSpiderman ? 'bg-pink-600 border-pink-400 text-white font-semibold rounded-tr-none shadow-[0_0_10px_rgba(236,72,153,0.4)]' : 'bg-gradient-to-r from-pink-500 to-rose-500 border-pink-400 text-white rounded-tr-none'
                     : msg.isError
-                    ? 'bg-rose-500/10 border-rose-500 text-rose-300 rounded-tl-none'
-                    : `${theme.bgCard} ${theme.border} rounded-tl-none shadow-sm`
+                    ? 'bg-pink-600/10 border-pink-600 text-pink-400 rounded-tl-none'
+                    : `${theme.bgCard} ${theme.border} ${isSpiderman ? 'text-pink-100' : ''} rounded-tl-none shadow-sm`
                 }`}>
                   {msg.role === 'assistant' && (
                     <div className={`flex items-center justify-between border-b ${theme.border} pb-2 mb-2 text-xs ${theme.textSecondary}`}>
-                      <span className="font-mono text-[11px] font-semibold bg-gradient-to-r from-pink-300 to-rose-300 bg-clip-text text-transparent">Nova AI</span>
+                      <span className={`font-mono text-[11px] font-bold ${isSpiderman ? 'text-pink-400' : 'bg-gradient-to-r from-pink-300 to-rose-300 bg-clip-text text-transparent'}`}>Nova AI</span>
                       <button onClick={() => copyToClipboard(msg.content, index)} className="p-1 hover:opacity-80">
                         {copiedIndex === index ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                       </button>
                     </div>
                   )}
                   {msg.image && (
-                    <div className="mb-3 overflow-hidden rounded-xl border border-slate-700">
+                    <div className="mb-3 overflow-hidden rounded-xl border border-pink-500/30">
                       <img src={msg.image} alt="User attachment" className="max-h-60 w-auto object-cover" />
                     </div>
                   )}
@@ -696,7 +694,7 @@ STRICT FORMATTING RULES:
                 </div>
                 {msg.role === 'user' && (
                   <div className={`w-8 h-8 rounded-xl ${theme.bgCard} border ${theme.border} flex items-center justify-center shrink-0`}>
-                    <User className="w-4 h-4" />
+                    <User className={`w-4 h-4 ${isSpiderman ? 'text-pink-500' : ''}`} />
                   </div>
                 )}
               </div>
@@ -706,10 +704,10 @@ STRICT FORMATTING RULES:
           {isLoading && (
             <div className="flex gap-4 max-w-3xl mx-auto items-center">
               <div className={`w-8 h-8 rounded-xl ${theme.bgCard} border ${theme.border} flex items-center justify-center`}>
-                <Sparkles className="w-4 h-4 text-pink-400" />
+                {isSpiderman ? <span className="text-sm font-bold text-pink-500">🕷️</span> : <Sparkles className="w-4 h-4 text-pink-400" />}
               </div>
-              <div className={`${theme.bgCard} border ${theme.border} rounded-xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
-                <span className="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
+              <div className={`${theme.bgCard} border ${theme.border} rounded-xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2 backdrop-blur-md`}>
+                <span className={`w-2 h-2 rounded-full ${isSpiderman ? 'bg-pink-500 shadow-[0_0_8px_rgba(236,72,153,0.8)]' : 'bg-pink-400'} animate-ping`}></span>
                 <span>Thinking...</span>
               </div>
             </div>
@@ -719,25 +717,25 @@ STRICT FORMATTING RULES:
         </div>
 
         {/* Input Bar & Footer with "Made by Areesha Riaz" */}
-        <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur`}>
+        <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur-md`}>
           <div className="max-w-3xl mx-auto space-y-2">
             
             <input type="file" ref={fileInputRef} accept="image/*" onChange={handleImageSelect} className="hidden" />
 
             {selectedImage && (
               <div className="relative inline-block mb-1">
-                <img src={selectedImage} alt="Attachment preview" className="w-16 h-16 object-cover rounded-xl border border-slate-700 shadow-md" />
-                <button onClick={() => setSelectedImage(null)} className="absolute -top-2 -right-2 bg-rose-500 text-white rounded-full p-1 text-xs">
+                <img src={selectedImage} alt="Attachment preview" className="w-16 h-16 object-cover rounded-xl border border-pink-500/40 shadow-md" />
+                <button onClick={() => setSelectedImage(null)} className="absolute -top-2 -right-2 bg-pink-600 text-white rounded-full p-1 text-xs">
                   <X className="w-3 h-3" />
                 </button>
               </div>
             )}
 
-            <div className={`relative flex items-center ${theme.bgInput} border ${theme.border} focus-within:border-pink-400 rounded-2xl p-2 transition-all shadow-sm`}>
+            <div className={`relative flex items-center ${theme.bgInput} border ${theme.border} focus-within:border-pink-500 rounded-2xl p-2 transition-all shadow-sm backdrop-blur-md`}>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className={`p-2 rounded-xl ${theme.textSecondary} hover:text-pink-200 transition-colors`}
+                className={`p-2 rounded-xl ${theme.textSecondary} hover:text-pink-400 transition-colors`}
                 title="Attach Image"
               >
                 <Paperclip className="w-4 h-4" />
@@ -755,14 +753,14 @@ STRICT FORMATTING RULES:
                 }}
                 placeholder={`Ask ${MODES.find(m => m.id === activeMode)?.name} anything...`}
                 rows={1}
-                className={`flex-1 bg-transparent border-none focus:outline-none ${theme.textPrimary} text-sm px-3 resize-none max-h-32`}
+                className={`flex-1 bg-transparent border-none focus:outline-none ${isSpiderman ? 'text-pink-100 placeholder:text-pink-300/40' : theme.textPrimary} text-sm px-3 resize-none max-h-32`}
               />
 
               <button
                 type="button"
                 onClick={() => handleSendMessage()}
                 disabled={isLoading || (!inputMessage.trim() && !selectedImage)}
-                className={`p-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium shadow-sm transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed`}
+                className={`p-2.5 rounded-xl ${isSpiderman ? 'bg-pink-600 text-white shadow-[0_0_10px_rgba(236,72,153,0.5)]' : 'bg-gradient-to-r from-pink-500 to-rose-500 text-white'} font-medium shadow-sm transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed`}
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -772,7 +770,7 @@ STRICT FORMATTING RULES:
             <div className="flex items-center justify-between px-2 text-[12px]">
               <span className={theme.textSecondary}>Enter to send, Shift+Enter for newline</span>
               <span className="font-semibold flex items-center gap-1">
-                Made by <span className="font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">Areesha Riaz</span>
+                Made by <span className={`font-bold ${isSpiderman ? 'text-pink-400 drop-shadow-[0_0_6px_rgba(236,72,153,0.6)]' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Areesha Riaz</span>
               </span>
             </div>
 
