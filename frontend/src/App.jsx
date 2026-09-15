@@ -5,6 +5,42 @@ import {
   Menu, X, History, Paperclip, Heart, Sparkles, Star
 } from 'lucide-react';
 
+const THEMES = {
+  dark: {
+    name: 'Dark Slate',
+    bgMain: 'bg-slate-950',
+    bgSidebar: 'bg-slate-900',
+    bgHeader: 'bg-slate-900/40',
+    border: 'border-slate-800',
+    textPrimary: 'text-pink-200',
+    textSecondary: 'text-pink-300/70',
+    bgCard: 'bg-slate-900',
+    bgInput: 'bg-slate-950',
+  },
+  light: {
+    name: 'Clean Light',
+    bgMain: 'bg-slate-50',
+    bgSidebar: 'bg-white',
+    bgHeader: 'bg-white/80',
+    border: 'border-slate-200',
+    textPrimary: 'text-pink-900',
+    textSecondary: 'text-pink-700/70',
+    bgCard: 'bg-white',
+    bgInput: 'bg-white',
+  },
+  spiderman: {
+    name: 'Spider-Man',
+    bgMain: 'bg-red-950',
+    bgSidebar: 'bg-red-900',
+    bgHeader: 'bg-red-900/40',
+    border: 'border-blue-600/50',
+    textPrimary: 'text-blue-200',
+    textSecondary: 'text-blue-300/80',
+    bgCard: 'bg-red-900',
+    bgInput: 'bg-red-950',
+  }
+};
+
 const MODES = [
   { id: 'qa', name: 'Q&A Assistant', icon: MessageSquare, color: 'from-pink-400 to-rose-400', desc: 'Direct, to-the-point concise answers' },
   { id: 'summarize', name: 'Summarizer', icon: FileText, color: 'from-purple-400 to-pink-400', desc: 'Strictly short summaries only' },
@@ -60,6 +96,43 @@ const BowIcon = ({ className = "w-6 h-6" }) => (
   </svg>
 );
 
+// Dynamic Background for Themes (webs/spiders for spiderman theme, bows for others)
+const ThemeBackground = ({ themeKey }) => {
+  if (themeKey === 'spiderman') {
+    return (
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-400 via-transparent to-transparent">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+            <defs>
+              <pattern id="spiderweb" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <path d="M 0 50 L 100 50 M 50 0 L 50 100 M 14.64 14.64 L 85.36 85.36 M 14.64 85.36 L 85.36 14.64" stroke="#ffffff" strokeWidth="0.8" fill="none"/>
+                <circle cx="50" cy="50" r="20" stroke="#ffffff" strokeWidth="0.6" fill="none"/>
+                <circle cx="50" cy="50" r="40" stroke="#ffffff" strokeWidth="0.6" fill="none"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#spiderweb)" />
+          </svg>
+        </div>
+        <div className="absolute top-12 left-10 text-blue-400/40 text-2xl animate-pulse">🕷️</div>
+        <div className="absolute bottom-20 right-16 text-blue-400/30 text-3xl">🕸️</div>
+        <div className="absolute top-1/3 right-12 text-red-500/30 text-xl">🕷️</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-25">
+      <BowIcon className="absolute top-10 left-12 w-32 h-32 text-pink-500 rotate-[-15deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
+      <BowIcon className="absolute top-16 right-16 w-28 h-28 text-rose-400 rotate-[20deg] drop-shadow-[0_0_10px_rgba(251,113,133,0.5)]" />
+      <BowIcon className="absolute top-1/3 left-8 w-36 h-36 text-fuchsia-400 rotate-[45deg] drop-shadow-[0_0_12px_rgba(232,121,249,0.5)]" />
+      <BowIcon className="absolute top-1/2 right-10 w-32 h-32 text-pink-400 rotate-[-30deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
+      <BowIcon className="absolute bottom-12 left-20 w-40 h-40 text-rose-300 rotate-[12deg] drop-shadow-[0_0_15px_rgba(253,164,175,0.5)]" />
+      <BowIcon className="absolute bottom-16 right-24 w-28 h-28 text-pink-500 rotate-[-45deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
+      <BowIcon className="absolute top-2/3 left-1/3 w-24 h-24 text-pink-400 rotate-[10deg] drop-shadow-[0_0_8px_rgba(244,114,182,0.5)]" />
+    </div>
+  );
+};
+
 // Smooth Sparkle Trail & Click Glitter Burst Effect
 const SparkleEffect = () => {
   const [sparkles, setSparkles] = useState([]);
@@ -95,7 +168,6 @@ const SparkleEffect = () => {
     };
 
     const handleClick = (e) => {
-      // Exploding glitter burst on click
       const burstCount = 10;
       const burstParticles = [];
       for (let i = 0; i < burstCount; i++) {
@@ -119,7 +191,6 @@ const SparkleEffect = () => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('click', handleClick);
 
-    // Smooth physics animation loop for drifting & fading particles
     const animate = () => {
       setSparkles(prev => 
         prev
@@ -173,7 +244,10 @@ export default function App() {
   const [selectedModel, setSelectedModel] = useState('qwen/qwen3-32b');
   const [maxTokens, setMaxTokens] = useState(500);
   const [activeMode, setActiveMode] = useState('qa');
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [currentThemeKey, setCurrentThemeKey] = useState('dark');
+  const theme = THEMES[currentThemeKey] || THEMES.dark;
+  const isDarkMode = currentThemeKey === 'dark' || currentThemeKey === 'spiderman';
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHistoryVisible, setIsHistoryVisible] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -369,33 +443,14 @@ STRICT FORMATTING RULES:
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  const theme = {
-    bgMain: isDarkMode ? 'bg-slate-950' : 'bg-slate-50',
-    bgSidebar: isDarkMode ? 'bg-slate-900' : 'bg-white',
-    bgHeader: isDarkMode ? 'bg-slate-900/40' : 'bg-white/80',
-    border: isDarkMode ? 'border-slate-800' : 'border-slate-200',
-    textPrimary: isDarkMode ? 'text-pink-200' : 'text-pink-900',
-    textSecondary: isDarkMode ? 'text-pink-300/70' : 'text-pink-700/70',
-    bgCard: isDarkMode ? 'bg-slate-900' : 'bg-white',
-    bgInput: isDarkMode ? 'bg-slate-950' : 'bg-white',
-  };
-
   return (
     <div className={`flex h-screen w-full ${theme.bgMain} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
-      {/* Smooth Sparkle Trail & Click Glitter Burst Effect */}
+      {/* Sparkle Trail & Click Glitter Burst Effect */}
       <SparkleEffect />
 
-      {/* Highly Visible Background Bow Watermarks/Decorations */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-25">
-        <BowIcon className="absolute top-10 left-12 w-32 h-32 text-pink-500 rotate-[-15deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
-        <BowIcon className="absolute top-16 right-16 w-28 h-28 text-rose-400 rotate-[20deg] drop-shadow-[0_0_10px_rgba(251,113,133,0.5)]" />
-        <BowIcon className="absolute top-1/3 left-8 w-36 h-36 text-fuchsia-400 rotate-[45deg] drop-shadow-[0_0_12px_rgba(232,121,249,0.5)]" />
-        <BowIcon className="absolute top-1/2 right-10 w-32 h-32 text-pink-400 rotate-[-30deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
-        <BowIcon className="absolute bottom-12 left-20 w-40 h-40 text-rose-300 rotate-[12deg] drop-shadow-[0_0_15px_rgba(253,164,175,0.5)]" />
-        <BowIcon className="absolute bottom-16 right-24 w-28 h-28 text-pink-500 rotate-[-45deg] drop-shadow-[0_0_10px_rgba(244,114,182,0.5)]" />
-        <BowIcon className="absolute top-2/3 left-1/3 w-24 h-24 text-pink-400 rotate-[10deg] drop-shadow-[0_0_8px_rgba(244,114,182,0.5)]" />
-      </div>
+      {/* Dynamic Theme Background */}
+      <ThemeBackground themeKey={currentThemeKey} />
 
       {isMobileMenuOpen && (
         <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-30 md:hidden" />
@@ -413,7 +468,7 @@ STRICT FORMATTING RULES:
               <h1 className="font-bold text-base tracking-wide bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">Nova AI</h1>
             </div>
             <div className="flex items-center space-x-1">
-              <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="New Whimsy Journey">
+              <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="New Journey">
                 <Plus className="w-5 h-5" />
               </button>
               <button onClick={() => setIsMobileMenuOpen(false)} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} md:hidden`}>
@@ -459,7 +514,7 @@ STRICT FORMATTING RULES:
 
           {/* Active Chat Tab */}
           <div className="p-4 pb-2 space-y-2">
-            <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} block`}>Current Whimsy Journey</label>
+            <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} block`}>Current Journey</label>
             <div className={`flex items-center justify-between p-2.5 rounded-xl border ${theme.border} ${theme.bgCard} font-medium text-xs shadow-sm`}>
               <div className="flex items-center space-x-2 truncate">
                 <MessageSquare className="w-4 h-4 shrink-0 text-pink-400" />
@@ -471,7 +526,7 @@ STRICT FORMATTING RULES:
               className={`w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border border-dashed ${theme.border} hover:border-pink-400 ${theme.textSecondary} text-xs font-semibold transition-all`}
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>+ Start New Whimsy Journey</span>
+              <span>+ Start New Journey</span>
             </button>
           </div>
 
@@ -494,7 +549,7 @@ STRICT FORMATTING RULES:
             {isHistoryVisible && (
               <div className="space-y-1">
                 {historicalSessions.length === 0 ? (
-                  <p className={`text-xs p-2 ${theme.textSecondary} italic`}>No past whimsy journeys yet</p>
+                  <p className={`text-xs p-2 ${theme.textSecondary} italic`}>No past journeys yet</p>
                 ) : (
                   historicalSessions.map(s => (
                     <div
@@ -557,13 +612,23 @@ STRICT FORMATTING RULES:
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Theme Selector Dropdown */}
+            <select
+              value={currentThemeKey}
+              onChange={(e) => setCurrentThemeKey(e.target.value)}
+              className={`px-3 py-1.5 text-xs rounded-xl border ${theme.border} ${theme.bgCard} ${theme.textPrimary} font-medium focus:outline-none cursor-pointer shadow-sm`}
+            >
+              {Object.entries(THEMES).map(([key, t]) => (
+                <option key={key} value={key} className="bg-slate-900 text-white">
+                  Theme: {t.name}
+                </option>
+              ))}
+            </select>
+
             <div className={`hidden sm:flex items-center space-x-1.5 text-xs px-3 py-1.5 rounded-full border ${theme.border} ${theme.bgCard}`}>
               <Zap className="w-3.5 h-3.5 text-pink-400" />
               <span>Est. Tokens: <strong className="font-mono">{totalTokens}</strong></span>
             </div>
-            <button onClick={() => setIsDarkMode(!isDarkMode)} className={`p-2 rounded-xl border ${theme.border} ${theme.bgCard}`}>
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-pink-700" />}
-            </button>
             <button onClick={() => createNewSession()} className={`text-xs flex items-center space-x-1.5 ${theme.bgCard} px-3 py-2 rounded-xl border ${theme.border}`}>
               <RefreshCw className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Reset</span>
@@ -582,7 +647,7 @@ STRICT FORMATTING RULES:
               </div>
               <div>
                 <h3 className="text-lg font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">What shall we manifest today?</h3>
-                <p className={`text-sm ${theme.textSecondary} mt-1`}>Pick a potion below or cast a spell to get started.</p>
+                <p className={`text-sm ${theme.textSecondary} mt-1`}>Pick a prompt below or type your question to get started.</p>
               </div>
               <div className="w-full space-y-2 pt-4">
                 {MODE_PROMPTS[activeMode]?.map((prompt, idx) => (
@@ -644,7 +709,7 @@ STRICT FORMATTING RULES:
               </div>
               <div className={`${theme.bgCard} border ${theme.border} rounded-xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2`}>
                 <span className="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>
-                <span>Sparkle your thoughts here...</span>
+                <span>Thinking...</span>
               </div>
             </div>
           )}
@@ -652,7 +717,7 @@ STRICT FORMATTING RULES:
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar with "Made by Areesha Riaz" cleanly positioned under the text box */}
+        {/* Input Bar & Footer with "Made by Areesha Riaz" */}
         <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur`}>
           <div className="max-w-3xl mx-auto space-y-2">
             
@@ -687,86 +752,33 @@ STRICT FORMATTING RULES:
                     handleSendMessage();
                   }
                 }}
-                placeholder="Sparkle your thoughts here..."
+                placeholder={`Ask ${MODES.find(m => m.id === activeMode)?.name} anything...`}
                 rows={1}
-                className={`flex-1 bg-transparent px-2 py-1.5 text-sm ${theme.textPrimary} placeholder-pink-300/40 focus:outline-none resize-none overflow-y-auto max-h-32`}
+                className={`flex-1 bg-transparent border-none focus:outline-none ${theme.textPrimary} text-sm px-3 resize-none max-h-32`}
               />
 
               <button
+                type="button"
                 onClick={() => handleSendMessage()}
-                disabled={(!inputMessage.trim() && !selectedImage) || isLoading}
-                className={`p-2.5 rounded-xl transition-all ${
-                  (inputMessage.trim() || selectedImage) && !isLoading
-                    ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:opacity-90 shadow-sm'
-                    : `${theme.bgCard} ${theme.textSecondary} cursor-not-allowed`
-                }`}
+                disabled={isLoading || (!inputMessage.trim() && !selectedImage)}
+                className={`p-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-medium shadow-sm transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed`}
               >
                 <Send className="w-4 h-4" />
               </button>
             </div>
-            
-            <div className="flex items-center justify-between px-2 text-[13px]">
-              <span className={theme.textSecondary}>Enter to cast spell, Shift+Enter to keep sharing</span>
+
+            {/* Footer containing Made by Areesha Riaz (size set to text-[12px]) */}
+            <div className="flex items-center justify-between px-2 text-[12px]">
+              <span className={theme.textSecondary}>Enter to send, Shift+Enter for newline</span>
               <span className="font-semibold flex items-center gap-1">
                 Made by <span className="font-bold bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent">Areesha Riaz</span>
               </span>
             </div>
+
           </div>
         </div>
+
       </main>
-
-      {/* Settings Modal */}
-      {showSettings && (
-        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex justify-end">
-          <div className={`w-full sm:w-96 ${theme.bgSidebar} h-full border-l ${theme.border} p-6 flex flex-col justify-between shadow-2xl`}>
-            <div className="space-y-6">
-              <div className={`flex items-center justify-between border-b ${theme.border} pb-4`}>
-                <div className="flex items-center space-x-2">
-                  <Settings className="w-5 h-5 text-pink-400" />
-                  <h3 className="font-bold bg-gradient-to-r from-pink-300 to-rose-300 bg-clip-text text-transparent">Nova Settings</h3>
-                </div>
-                <button onClick={() => setShowSettings(false)} className={`${theme.textSecondary} hover:text-pink-200`}>✕</button>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-xs font-semibold flex items-center justify-between">
-                  <span>Model Selector</span>
-                  <Cpu className="w-3.5 h-3.5 text-pink-400" />
-                </label>
-                <select
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value)}
-                  className={`w-full ${theme.bgInput} border ${theme.border} rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-pink-400 ${theme.textPrimary}`}
-                >
-                  {GROQ_MODELS.map(m => (
-                    <option key={m.id} value={m.id}>{m.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span>Max Response Tokens</span>
-                  <span className="font-mono text-pink-400">{maxTokens}</span>
-                </div>
-                <input
-                  type="range"
-                  min="100"
-                  max="1000"
-                  step="50"
-                  value={maxTokens}
-                  onChange={(e) => setMaxTokens(e.target.value)}
-                  className="w-full accent-pink-500 bg-slate-800 rounded-lg cursor-pointer"
-                />
-              </div>
-            </div>
-
-            <button onClick={() => setShowSettings(false)} className="w-full py-2.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl text-xs font-semibold hover:opacity-90 shadow-sm">
-              Save & Apply
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
