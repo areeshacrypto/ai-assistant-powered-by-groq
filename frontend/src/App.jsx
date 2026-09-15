@@ -376,7 +376,8 @@ STRICT FORMATTING RULES:
 2. Write all math and technical expressions in plain, standard text or simple Unicode.
 3. DO NOT use asterisks (*) for emphasis, bolding, or lists.
 4. DO NOT use horizontal lines, dividers, or dashes (---, ___).
-5. Output pure, clean plain text with standard line breaks for paragraphs.`;
+5. Output pure, clean plain text with standard line breaks for paragraphs.
+6. Answer everything the user asks in concept explainer, summarizer and Q&A modes`;
 
       const historyForApi = [
         { role: 'system', content: systemPrompt },
