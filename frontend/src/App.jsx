@@ -99,7 +99,23 @@ const estimateTokens = (text) => {
   return Math.ceil(text.trim().split(/\s+/).length * 1.3);
 };
 
-// Bow SVG Component
+// Exact Spider Web SVG from your Screenshot
+const SpiderWebIcon = ({ className = "w-10 h-10" }) => (
+  <svg className={className} viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg">
+    {/* Radial strands */}
+    <line x1="50" y1="0" x2="50" y2="100" strokeOpacity="0.6" />
+    <line x1="0" y1="50" x2="100" y2="50" strokeOpacity="0.6" />
+    <line x1="15" y1="15" x2="85" y2="85" strokeOpacity="0.6" />
+    <line x1="85" y1="15" x2="15" y2="85" strokeOpacity="0.6" />
+    
+    {/* Concentric curved web loops */}
+    <path d="M 50 30 Q 60 40 70 50 Q 60 60 50 70 Q 40 60 30 50 Q 40 40 50 30 Z" strokeOpacity="0.7" />
+    <path d="M 50 15 Q 67 33 85 50 Q 67 67 50 85 Q 33 67 15 50 Q 33 33 50 15 Z" strokeOpacity="0.5" />
+    <path d="M 50 5 Q 75 25 95 50 Q 75 75 50 95 Q 25 75 5 50 Q 25 25 50 5 Z" strokeOpacity="0.3" />
+  </svg>
+);
+
+// Bow SVG Component for other themes
 const BowIcon = ({ className = "w-6 h-6" }) => (
   <svg className={className} viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
     <path d="M256 224C234.333 160 128 144 64 192C0 240 64 336 128 288C153.256 269.058 192 272 224 288L192 384C160 448 224 480 256 416C288 480 352 448 320 384L288 288C320 272 358.744 269.058 384 288C448 336 512 240 448 192C384 144 277.667 160 256 224ZM256 288C240 288 224 272 256 240C288 272 272 288 256 288Z" />
@@ -122,8 +138,12 @@ const ThemeBackground = ({ themeKey }) => {
           </div>
         )}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
-        <div className="absolute top-12 left-20 text-pink-500/50 text-3xl animate-pulse">🕷️</div>
-        <div className="absolute bottom-24 right-20 text-pink-400/40 text-4xl">🕸️</div>
+        
+        {/* Random scattered webs across main background */}
+        <div className="absolute top-[8%] left-[25%] text-pink-500/40 w-16 h-16 rotate-12"><SpiderWebIcon className="w-full h-full" /></div>
+        <div className="absolute top-[35%] right-[15%] text-pink-400/30 w-24 h-24 -rotate-45"><SpiderWebIcon className="w-full h-full" /></div>
+        <div className="absolute bottom-[20%] left-[30%] text-pink-500/35 w-20 h-20 rotate-90"><SpiderWebIcon className="w-full h-full" /></div>
+        <div className="absolute top-[65%] right-[35%] text-pink-400/25 w-14 h-14 rotate-[15deg]"><SpiderWebIcon className="w-full h-full" /></div>
       </div>
     );
   }
@@ -467,16 +487,15 @@ STRICT FORMATTING RULES:
       {/* Sidebar with Random Scattered Spider Webs */}
       <aside className={`fixed md:relative inset-y-0 left-0 z-40 w-80 ${theme.bgSidebar} border-r ${theme.border} flex flex-col justify-between shrink-0 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} overflow-hidden`}>
         
-        {/* Random Scattered Spider Webs & Spiders Overlay */}
+        {/* Random Scattered Spider Webs & Spiders Overlay in Sidebar */}
         {isSpiderman && (
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-35 select-none">
-            <span className="absolute top-[14%] left-[6%] text-pink-500 text-lg rotate-[-15deg]">🕸️</span>
-            <span className="absolute top-[28%] left-[82%] text-pink-400 text-sm rotate-[45deg]">🕷️</span>
-            <span className="absolute top-[45%] left-[12%] text-pink-500 text-2xl rotate-[30deg]">🕸️</span>
-            <span className="absolute top-[62%] left-[75%] text-pink-300 text-base rotate-[-30deg]">🕸️</span>
-            <span className="absolute top-[80%] left-[20%] text-pink-500 text-sm rotate-[12deg]">🕷️</span>
-            <span className="absolute top-[90%] left-[85%] text-pink-400 text-xl rotate-[-45deg]">🕸️</span>
-            <span className="absolute top-[5%] left-[65%] text-pink-500 text-sm rotate-[60deg]">🕸️</span>
+            <div className="absolute top-[10%] left-[5%] w-16 h-16 rotate-12 text-pink-500"><SpiderWebIcon className="w-full h-full" /></div>
+            <div className="absolute top-[32%] left-[70%] w-20 h-20 -rotate-45 text-pink-400"><SpiderWebIcon className="w-full h-full" /></div>
+            <div className="absolute top-[55%] left-[10%] w-14 h-14 rotate-[30deg] text-pink-500"><SpiderWebIcon className="w-full h-full" /></div>
+            <div className="absolute top-[75%] left-[65%] w-24 h-24 rotate-[15deg] text-pink-300"><SpiderWebIcon className="w-full h-full" /></div>
+            <span className="absolute top-[20%] left-[80%] text-pink-400 text-sm">🕷️</span>
+            <span className="absolute top-[68%] left-[20%] text-pink-500 text-base">🕷️</span>
           </div>
         )}
 
