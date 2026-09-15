@@ -6,9 +6,13 @@ import {
 } from 'lucide-react';
 
 // ==========================================
-// 🎨 YOUR CUSTOM SPIDER-WEB BACKGROUND
+// 🎨 YOUR LOCAL PNG BACKGROUND SETUP
 // ==========================================
-const SPIDERMAN_CUSTOM_BG = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA="; // (Using the uploaded pink web pattern layout)
+// 1. Put your PNG file in the same folder as this code file.
+// 2. Change './my-background.png' below to match your actual PNG filename.
+import myCustomPngBg from './my-background.png';
+
+const SPIDERMAN_CUSTOM_BG = myCustomPngBg; 
 
 const THEMES = {
   dark: {
@@ -102,19 +106,24 @@ const BowIcon = ({ className = "w-6 h-6" }) => (
   </svg>
 );
 
-// Dynamic Background for Themes (Using your Pink & Black Spider Web image)
+// Dynamic Background Component using your PNG
 const ThemeBackground = ({ themeKey }) => {
   if (themeKey === 'spiderman') {
     return (
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-70 filter brightness-90 contrast-125" 
-          style={{ backgroundImage: `url(${SPIDERMAN_CUSTOM_BG})` }}
-        />
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
+        {SPIDERMAN_CUSTOM_BG ? (
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-85" 
+            style={{ backgroundImage: `url(${SPIDERMAN_CUSTOM_BG})` }}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-black flex items-center justify-center text-pink-500 text-xs font-mono p-4 text-center">
+            [⚠️ Please check your PNG image import path at the top of the file!]
+          </div>
+        )}
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
         <div className="absolute top-12 left-16 text-pink-500/50 text-3xl animate-pulse">🕷️</div>
         <div className="absolute bottom-24 right-20 text-pink-400/40 text-4xl">🕸️</div>
-        <div className="absolute top-1/3 right-16 text-pink-500/40 text-2xl">🕷️</div>
       </div>
     );
   }
@@ -243,7 +252,7 @@ export default function App() {
   const [selectedModel, setSelectedModel] = useState('qwen/qwen3-32b');
   const [maxTokens, setMaxTokens] = useState(500);
   const [activeMode, setActiveMode] = useState('qa');
-  const [currentThemeKey, setCurrentThemeKey] = useState('dark');
+  const [currentThemeKey, setCurrentThemeKey] = useState('spiderman'); // Default to spiderman theme to show PNG instantly
   const theme = THEMES[currentThemeKey] || THEMES.dark;
   const isSpiderman = currentThemeKey === 'spiderman';
 
