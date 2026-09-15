@@ -10,7 +10,7 @@ import {
 // ==========================================
 // 1. Put your PNG file in the same folder as this code file.
 // 2. Change './my-background.png' below to match your actual PNG filename.
-import myCustomPngBg from './my-background.png';
+import myCustomPngBg from './my-background.jpeg';
 
 const SPIDERMAN_CUSTOM_BG = myCustomPngBg; 
 
