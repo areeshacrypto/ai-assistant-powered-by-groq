@@ -615,7 +615,7 @@ STRICT FORMATTING RULES:
               <h1 className={`font-bold text-base tracking-wide ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Nova AI</h1>
             </div>
             <div className="flex items-center space-x-1">
-              <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="New Journey">
+              <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="New Whimsy Journey">
                 <Plus className="w-5 h-5" />
               </button>
               <button onClick={() => setIsMobileMenuOpen(false)} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} md:hidden`}>
@@ -673,7 +673,7 @@ STRICT FORMATTING RULES:
               className={`w-full flex items-center justify-center space-x-2 py-2 px-3 rounded-xl border border-dashed ${theme.border} hover:border-pink-500 ${theme.textSecondary} text-xs font-semibold transition-all`}
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>+ Start New Journey</span>
+              <span>+ Start New Whimsy Journey</span>
             </button>
           </div>
 
@@ -899,7 +899,7 @@ STRICT FORMATTING RULES:
                     handleSendMessage();
                   }
                 }}
-                placeholder={`Ask ${MODES.find(m => m.id === activeMode)?.name} anything...`}
+                placeholder={`Sparkle ${MODES.find(m => m.id === activeMode)?.name} your thoughts here...`}
                 rows={1}
                 className={`flex-1 bg-transparent border-none focus:outline-none ${theme.textPrimary} placeholder:text-slate-400 text-sm px-3 resize-none max-h-32`}
               />
