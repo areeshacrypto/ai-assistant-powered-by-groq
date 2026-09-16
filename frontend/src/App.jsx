@@ -99,21 +99,21 @@ const MODES = [
   { id: 'summarize', name: 'Summarizer', icon: FileText, color: 'from-purple-400 to-pink-400', desc: 'Strictly short summaries only' },
   { id: 'math', name: 'Math Solver', icon: Calculator, color: 'from-pink-500 to-rose-500', desc: 'Step-by-step mathematical problem solving' },
   { id: 'explain', name: 'Concept Explainer', icon: Lightbulb, color: 'from-fuchsia-400 to-pink-400', desc: 'Detailed explanations regardless of length' }
-];
+],
 
 const GROQ_MODELS = [
   { id: 'qwen/qwen3-32b', name: 'Qwen 3 32B (Default)' },
   { id: 'llama-3.2-11b-vision-preview', name: 'Llama 3.2 11B Vision' },
   { id: 'llama-3.1-8b-instant', name: 'Llama 3.1 8B Instant' },
   { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile' }
-];
+],
 
 const MODE_PROMPTS = {
   qa: ["When was Quaid-e-Azam born?", "What is the capital of France?", "List 3 clean code tips for Python"],
   summarize: ["Summarize the theory of relativity in two lines", "TL;DR of object-oriented programming", "Give a short summary of quantum computing"],
   math: ["Solve 2x + 5 = 15 step by step", "Calculate the derivative of f(x) = 3x^2 + 4x - 5", "What is the integral of 2x dx?"],
   explain: ["Explain APIs", "How does Docker work?", "What is recursion?"]
-};
+},
 
 const MODE_RULES = {
   math: `MODE-SPECIFIC INSTRUCTIONS FOR MATH SOLVER:
@@ -135,12 +135,12 @@ const MODE_RULES = {
   qa: `MODE-SPECIFIC INSTRUCTIONS FOR Q&A ASSISTANT:
 1. You are a Q&A Assistant.
 2. Answer directly, stay strictly to the point, and write NO MORE THAN 2 LINES total in your response.`
-};
+},
 
 const estimateTokens = (text) => {
   if (!text) return 0;
   return Math.ceil(text.trim().split(/\s+/).length * 1.3);
-};
+},
 
 // Exact Spider Web SVG from your Screenshot
 const SpiderWebIcon = ({ className = "w-10 h-10" }) => (
