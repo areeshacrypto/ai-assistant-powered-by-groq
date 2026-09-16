@@ -10,42 +10,22 @@ import {
 // ==========================================
 import myCustomJpegBg from './my-background.jpeg';
 
+
 const SPIDERMAN_CUSTOM_BG = myCustomJpegBg; 
 
+
 const THEMES = {
-  bluedark: {
-    name: 'Electric Blue (Dark)',
-    bgMain: 'bg-slate-950',
-    bgSidebar: 'bg-slate-900',
-    bgHeader: 'bg-slate-900/40',
-    border: 'border-blue-500/40',
-    textPrimary: 'text-blue-200 font-semibold',
-    textSecondary: 'text-blue-300/70',
-    bgCard: 'bg-slate-900/80',
-    bgInput: 'bg-slate-950/90',
-  },
-  bluelight: {
-    name: 'Electric Blue (Light)',
-    bgMain: 'bg-blue-50/50',
-    bgSidebar: 'bg-white/95',
-    bgHeader: 'bg-white/85',
-    border: 'border-blue-300/60',
-    textPrimary: 'text-slate-900 font-semibold',
-    textSecondary: 'text-blue-800/70',
-    bgCard: 'bg-white/90',
-    bgInput: 'bg-white',
-  },
   spiderlight: {
-    name: 'Pink & White Spider (Light)',
-    bgMain: 'bg-pink-50/50',
-    bgSidebar: 'bg-white/95',
-    bgHeader: 'bg-white/85',
-    border: 'border-pink-300/60',
-    textPrimary: 'text-slate-900 font-semibold',
-    textSecondary: 'text-pink-800/70',
-    bgCard: 'bg-white/90',
-    bgInput: 'bg-white',
-  },
+  name: 'Pink & White Spider (Light)',
+  bgMain: 'bg-pink-50/50',
+  bgSidebar: 'bg-white/95',
+  bgHeader: 'bg-white/85',
+  border: 'border-pink-300/60',
+  textPrimary: 'text-slate-900 font-semibold',
+  textSecondary: 'text-pink-800/70',
+  bgCard: 'bg-white/90',
+  bgInput: 'bg-white',
+},
   dark: {
     name: 'Dark Slate',
     bgMain: 'bg-slate-950',
@@ -78,6 +58,17 @@ const THEMES = {
     textSecondary: 'text-pink-300/70',
     bgCard: 'bg-black/80',
     bgInput: 'bg-black/90',
+  },
+  spiderlight: {
+    name: 'Pink & White Spider (Light)',
+    bgMain: 'bg-pink-50/50',
+    bgSidebar: 'bg-white/95',
+    bgHeader: 'bg-white/85',
+    border: 'border-pink-300/60',
+    textPrimary: 'text-slate-900 font-semibold',
+    textSecondary: 'text-pink-800/70',
+    bgCard: 'bg-white/90',
+    bgInput: 'bg-white',
   }
 };
 
@@ -129,19 +120,23 @@ const estimateTokens = (text) => {
   return Math.ceil(text.trim().split(/\s+/).length * 1.3);
 };
 
-// Exact Spider Web SVG
+// Exact Spider Web SVG from your Screenshot
 const SpiderWebIcon = ({ className = "w-10 h-10" }) => (
   <svg className={className} viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg">
+    {/* Radial strands */}
     <line x1="50" y1="0" x2="50" y2="100" strokeOpacity="0.6" />
     <line x1="0" y1="50" x2="100" y2="50" strokeOpacity="0.6" />
     <line x1="15" y1="15" x2="85" y2="85" strokeOpacity="0.6" />
     <line x1="85" y1="15" x2="15" y2="85" strokeOpacity="0.6" />
+    
+    {/* Concentric curved web loops */}
     <path d="M 50 30 Q 60 40 70 50 Q 60 60 50 70 Q 40 60 30 50 Q 40 40 50 30 Z" strokeOpacity="0.7" />
     <path d="M 50 15 Q 67 33 85 50 Q 67 67 50 85 Q 33 67 15 50 Q 33 33 50 15 Z" strokeOpacity="0.5" />
     <path d="M 50 5 Q 75 25 95 50 Q 75 75 50 95 Q 25 75 5 50 Q 25 25 50 5 Z" strokeOpacity="0.3" />
   </svg>
 );
 
+// Dynamic Background Component handling both dark and light spider versions
 const ThemeBackground = ({ themeKey }) => {
   if (themeKey === 'spiderman') {
     return (
@@ -153,6 +148,8 @@ const ThemeBackground = ({ themeKey }) => {
           />
         ) : null}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
+        
+        {/* Random scattered webs across dark background */}
         <div className="absolute top-[8%] left-[25%] text-pink-500/40 w-16 h-16 rotate-12"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute top-[35%] right-[15%] text-pink-400/30 w-24 h-24 -rotate-45"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute bottom-[20%] left-[30%] text-pink-500/35 w-20 h-20 rotate-90"><SpiderWebIcon className="w-full h-full" /></div>
@@ -164,6 +161,7 @@ const ThemeBackground = ({ themeKey }) => {
   if (themeKey === 'spiderlight') {
     return (
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 bg-gradient-to-br from-pink-50 via-white to-rose-50">
+        {/* Random scattered webs across light background */}
         <div className="absolute top-[10%] left-[20%] text-pink-400/35 w-20 h-20 rotate-12"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute top-[40%] right-[12%] text-rose-400/30 w-28 h-28 -rotate-30"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute bottom-[25%] left-[15%] text-pink-500/30 w-24 h-24 rotate-45"><SpiderWebIcon className="w-full h-full" /></div>
@@ -172,21 +170,11 @@ const ThemeBackground = ({ themeKey }) => {
     );
   }
 
-  if (themeKey === 'bluedark' || themeKey === 'bluelight') {
-    return (
-      <div className={`absolute inset-0 overflow-hidden pointer-events-none z-0 ${themeKey === 'bluedark' ? 'bg-slate-950' : 'bg-gradient-to-br from-blue-50 via-white to-cyan-50'}`}>
-        <div className="absolute top-[15%] left-[10%] w-24 h-24 rounded-full bg-blue-400/10 blur-xl animate-pulse" />
-        <div className="absolute top-[60%] right-[15%] w-36 h-36 rounded-full bg-cyan-400/15 blur-2xl animate-pulse [animation-delay:1s]" />
-        <div className="absolute bottom-[20%] left-[25%] w-20 h-20 rounded-full bg-blue-500/10 blur-lg animate-pulse [animation-delay:2s]" />
-        <div className="absolute top-[30%] right-[30%] w-16 h-16 rounded-full bg-indigo-400/15 blur-xl animate-pulse [animation-delay:1.5s]" />
-      </div>
-    );
-  }
-
   return null;
 };
 
-const SparkleEffect = ({ isSpiderman, isSpiderLight, isBlueTheme }) => {
+// Smooth Sparkle / Spider Trail Effect
+const SparkleEffect = ({ isSpiderman, isSpiderLight }) => {
   const [sparkles, setSparkles] = useState([]);
   const requestRef = useRef(null);
   const isMoving = useRef(false);
@@ -205,13 +193,7 @@ const SparkleEffect = ({ isSpiderman, isSpiderLight, isBlueTheme }) => {
         x: e.clientX + (Math.random() * 16 - 8),
         y: e.clientY + (Math.random() * 16 - 8),
         size: Math.random() * 10 + 6,
-        color: isSpiderman 
-          ? ['#ec4899', '#f472b6', '#ffffff'][Math.floor(Math.random() * 3)] 
-          : isSpiderLight 
-          ? ['#db2777', '#f43f5e', '#e11d48'][Math.floor(Math.random() * 3)] 
-          : isBlueTheme 
-          ? ['#3b82f6', '#60a5fa', '#38bdf8', '#93c5fd', '#ffffff'][Math.floor(Math.random() * 5)]
-          : ['#f472b6', '#fb7185', '#e879f9', '#fbcfe8', '#fda4af'][Math.floor(Math.random() * 5)],
+        color: isSpiderman ? ['#ec4899', '#f472b6', '#ffffff'][Math.floor(Math.random() * 3)] : isSpiderLight ? ['#db2777', '#f43f5e', '#e11d48'][Math.floor(Math.random() * 3)] : ['#f472b6', '#fb7185', '#e879f9', '#fbcfe8', '#fda4af'][Math.floor(Math.random() * 5)],
         opacity: 1,
         rotation: Math.random() * 360,
         vx: (Math.random() - 0.5) * 1.5,
@@ -236,13 +218,7 @@ const SparkleEffect = ({ isSpiderman, isSpiderLight, isBlueTheme }) => {
           x: e.clientX,
           y: e.clientY,
           size: Math.random() * 12 + 8,
-          color: isSpiderman 
-            ? ['#ec4899', '#fbcfe8', '#ffffff'][Math.floor(Math.random() * 3)] 
-            : isSpiderLight 
-            ? ['#db2777', '#f43f5e', '#fda4af'][Math.floor(Math.random() * 3)] 
-            : isBlueTheme 
-            ? ['#3b82f6', '#38bdf8', '#bfdbfe', '#ffffff'][Math.floor(Math.random() * 4)]
-            : ['#f472b6', '#fb7185', '#e879f9', '#ffffff', '#fbcfe8'][Math.floor(Math.random() * 5)],
+          color: isSpiderman ? ['#ec4899', '#fbcfe8', '#ffffff'][Math.floor(Math.random() * 3)] : isSpiderLight ? ['#db2777', '#f43f5e', '#fda4af'][Math.floor(Math.random() * 3)] : ['#f472b6', '#fb7185', '#e879f9', '#ffffff', '#fbcfe8'][Math.floor(Math.random() * 5)],
           opacity: 1,
           rotation: Math.random() * 360,
           vx: Math.cos(angle) * speed,
@@ -277,7 +253,7 @@ const SparkleEffect = ({ isSpiderman, isSpiderLight, isBlueTheme }) => {
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
       if (stopTimeout.current) clearTimeout(stopTimeout.current);
     };
-  }, [isSpiderman, isSpiderLight, isBlueTheme]);
+  }, [isSpiderman, isSpiderLight]);
 
   if (sparkles.length === 0) return null;
 
@@ -297,13 +273,7 @@ const SparkleEffect = ({ isSpiderman, isSpiderLight, isBlueTheme }) => {
             opacity: sparkle.opacity,
           }}
         >
-          {isSpiderman || isSpiderLight ? (
-            <span className="text-sm drop-shadow-[0_0_6px_rgba(236,72,153,0.9)]">🕷️</span>
-          ) : isBlueTheme ? (
-            <span className="text-sm drop-shadow-[0_0_8px_rgba(59,130,246,0.9)]">🔹</span>
-          ) : (
-            <Sparkles className="w-full h-full" />
-          )}
+          {isSpiderman || isSpiderLight ? <span className="text-sm drop-shadow-[0_0_6px_rgba(236,72,153,0.9)]">🕷️</span> : <Sparkles className="w-full h-full" />}
         </div>
       ))}
     </div>
@@ -314,11 +284,10 @@ export default function App() {
   const [selectedModel, setSelectedModel] = useState('qwen/qwen3-32b');
   const [maxTokens, setMaxTokens] = useState(500);
   const [activeMode, setActiveMode] = useState('qa');
-  const [currentThemeKey, setCurrentThemeKey] = useState('bluedark'); 
-  const theme = THEMES[currentThemeKey] || THEMES.bluedark;
+  const [currentThemeKey, setCurrentThemeKey] = useState('spiderlight'); 
+  const theme = THEMES[currentThemeKey] || THEMES.spiderlight;
   const isSpiderman = currentThemeKey === 'spiderman';
   const isSpiderLight = currentThemeKey === 'spiderlight';
-  const isBlueTheme = currentThemeKey === 'bluedark' || currentThemeKey === 'bluelight';
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHistoryVisible, setIsHistoryVisible] = useState(true);
@@ -518,16 +487,20 @@ STRICT FORMATTING RULES:
   return (
     <div className={`flex h-screen w-full ${theme.bgMain} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
-      <SparkleEffect isSpiderman={isSpiderman} isSpiderLight={isSpiderLight} isBlueTheme={isBlueTheme} />
+      {/* Sparkle / Spider Trail Effect */}
+      <SparkleEffect isSpiderman={isSpiderman} isSpiderLight={isSpiderLight} />
+
+      {/* Dynamic Theme Background */}
       <ThemeBackground themeKey={currentThemeKey} />
 
       {isMobileMenuOpen && (
         <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden" />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar with Random Scattered Spider Webs */}
       <aside className={`fixed md:relative inset-y-0 left-0 z-40 w-80 ${theme.bgSidebar} border-r ${theme.border} flex flex-col justify-between shrink-0 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} overflow-hidden`}>
         
+        {/* Random Scattered Spider Webs & Spiders Overlay in Sidebar */}
         {(isSpiderman || isSpiderLight) && (
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-30 select-none">
             <div className="absolute top-[10%] left-[5%] w-16 h-16 rotate-12 text-pink-600"><SpiderWebIcon className="w-full h-full" /></div>
@@ -543,10 +516,10 @@ STRICT FORMATTING RULES:
           
           <div className={`p-4 border-b ${theme.border} flex items-center justify-between`}>
             <div className="flex items-center space-x-3">
-              <div className={`p-2 ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white shadow-sm' : isBlueTheme ? 'bg-blue-600 text-white shadow-sm' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white'} rounded-xl shadow-sm flex items-center justify-center`}>
-                {isSpiderman || isSpiderLight ? <span className="text-base font-bold">🕷️</span> : isBlueTheme ? <span className="text-base font-bold">🔹</span> : <Sparkles className="w-5 h-5" />}
+              <div className={`p-2 ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white shadow-sm' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white'} rounded-xl shadow-sm flex items-center justify-center`}>
+                {isSpiderman || isSpiderLight ? <span className="text-base font-bold">🕷️</span> : <Sparkles className="w-5 h-5" />}
               </div>
-              <h1 className={`font-bold text-base tracking-wide ${isSpiderman || isSpiderLight ? 'text-pink-600' : isBlueTheme ? 'text-blue-500' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Nova AI</h1>
+              <h1 className={`font-bold text-base tracking-wide ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Nova AI</h1>
             </div>
             <div className="flex items-center space-x-1">
               <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="New Journey">
@@ -579,11 +552,11 @@ STRICT FORMATTING RULES:
                     }}
                     className={`flex flex-col items-start p-2.5 rounded-xl text-left transition-all border ${
                       isActive
-                        ? isSpiderman ? 'bg-black/90 border-pink-500 text-pink-400 shadow-sm font-bold' : isSpiderLight ? 'bg-pink-100/80 border-pink-400 text-pink-900 shadow-sm font-bold' : isBlueTheme ? 'bg-blue-600/20 border-blue-500 text-blue-400 shadow-sm font-bold' : 'bg-slate-800 border-slate-700 text-pink-200 shadow-sm'
+                        ? isSpiderman ? 'bg-black/90 border-pink-500 text-pink-400 shadow-sm font-bold' : isSpiderLight ? 'bg-pink-100/80 border-pink-400 text-pink-900 shadow-sm font-bold' : 'bg-slate-800 border-slate-700 text-pink-200 shadow-sm'
                         : `${theme.bgCard} ${theme.border} ${theme.textSecondary}`
                     }`}
                   >
-                    <div className={`p-1.5 rounded-lg mb-1.5 ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : isBlueTheme ? 'bg-blue-600 text-white' : `bg-gradient-to-r ${mode.color}`} text-white`}>
+                    <div className={`p-1.5 rounded-lg mb-1.5 ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : `bg-gradient-to-r ${mode.color}`} text-white`}>
                       <Icon className="w-3.5 h-3.5" />
                     </div>
                     <span className="text-xs font-semibold leading-tight">{mode.name}</span>
@@ -593,11 +566,12 @@ STRICT FORMATTING RULES:
             </div>
           </div>
 
+          {/* Active Chat Tab */}
           <div className="p-4 pb-2 space-y-2">
             <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} block`}>Current Journey</label>
-            <div className={`flex items-center justify-between p-2.5 rounded-xl border ${theme.border} ${theme.bgCard} font-medium text-xs shadow-sm ${isSpiderman || isSpiderLight || isBlueTheme ? 'text-slate-800 font-semibold dark:text-blue-200' : ''}`}>
+            <div className={`flex items-center justify-between p-2.5 rounded-xl border ${theme.border} ${theme.bgCard} font-medium text-xs shadow-sm ${isSpiderman || isSpiderLight ? 'text-slate-800 font-semibold' : ''}`}>
               <div className="flex items-center space-x-2 truncate">
-                <MessageSquare className={`w-4 h-4 shrink-0 ${isSpiderman || isSpiderLight ? 'text-pink-600' : isBlueTheme ? 'text-blue-500' : 'text-pink-400'}`} />
+                <MessageSquare className={`w-4 h-4 shrink-0 ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'text-pink-400'}`} />
                 <span className="truncate">{activeSession.title}</span>
               </div>
             </div>
@@ -610,6 +584,7 @@ STRICT FORMATTING RULES:
             </button>
           </div>
 
+          {/* History */}
           <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1">
             <div className="flex items-center justify-between mb-2 px-1">
               <button 
@@ -658,18 +633,15 @@ STRICT FORMATTING RULES:
             )}
           </div>
 
-          <div className={`p-4 border-t ${theme.border} space-y-2`}>
+          <div className={`p-4 border-t ${theme.border}`}>
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
-                <span className={`w-2 h-2 rounded-full ${isSpiderman || isSpiderLight ? 'bg-pink-600' : isBlueTheme ? 'bg-blue-500' : 'bg-emerald-500'} animate-pulse`}></span>
+                <span className={`w-2 h-2 rounded-full ${isSpiderman || isSpiderLight ? 'bg-pink-600' : 'bg-emerald-500'} animate-pulse`}></span>
                 <span className={`font-medium ${theme.textPrimary}`}>System Online</span>
               </div>
               <button onClick={() => { setShowSettings(!showSettings); setIsMobileMenuOpen(false); }} className={`p-1.5 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="Settings">
                 <Settings className="w-4 h-4" />
               </button>
-            </div>
-            <div className={`text-[10px] text-center ${theme.textSecondary} opacity-80 pt-1 border-t border-blue-500/10`}>
-              Made by Areesha
             </div>
           </div>
         </div>
@@ -682,11 +654,11 @@ STRICT FORMATTING RULES:
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className={`p-2 rounded-xl border ${theme.border} ${theme.bgCard} md:hidden`}>
               <Menu className="w-5 h-5" />
             </button>
-            <div className={`p-2 rounded-xl ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : isBlueTheme ? 'bg-blue-600 text-white' : `bg-gradient-to-r ${MODES.find(m => m.id === activeMode)?.color}`}`}>
-              {isSpiderman || isSpiderLight ? <span className="text-sm font-bold">🕷️</span> : isBlueTheme ? <span className="text-sm font-bold">🔹</span> : React.createElement(MODES.find(m => m.id === activeMode)?.icon || MessageSquare, { className: 'w-4 h-4 text-white' })}
+            <div className={`p-2 rounded-xl ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : `bg-gradient-to-r ${MODES.find(m => m.id === activeMode)?.color}`}`}>
+              {isSpiderman || isSpiderLight ? <span className="text-sm font-bold">🕷️</span> : React.createElement(MODES.find(m => m.id === activeMode)?.icon || MessageSquare, { className: 'w-4 h-4 text-white' })}
             </div>
             <div>
-              <h2 className={`text-sm font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : isBlueTheme ? 'text-blue-500' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'} flex items-center gap-1`}>
+              <h2 className={`text-sm font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'} flex items-center gap-1`}>
                 Nova ({MODES.find(m => m.id === activeMode)?.name})
               </h2>
               <p className={`text-xs ${theme.textSecondary} hidden sm:block`}>Model: <span className="font-mono">{selectedModel}</span></p>
@@ -694,20 +666,21 @@ STRICT FORMATTING RULES:
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Theme Selector Dropdown */}
             <select
               value={currentThemeKey}
               onChange={(e) => setCurrentThemeKey(e.target.value)}
-              className={`px-3 py-1.5 text-xs rounded-xl border ${theme.border} ${theme.bgCard} ${isSpiderman || isSpiderLight ? 'text-pink-700 font-bold' : isBlueTheme ? 'text-blue-600 font-bold' : theme.textPrimary} font-medium focus:outline-none cursor-pointer shadow-sm`}
+              className={`px-3 py-1.5 text-xs rounded-xl border ${theme.border} ${theme.bgCard} ${isSpiderman || isSpiderLight ? 'text-pink-700 font-bold' : theme.textPrimary} font-medium focus:outline-none cursor-pointer shadow-sm`}
             >
               {Object.entries(THEMES).map(([key, t]) => (
-                <option key={key} value={key} className={key.includes('light') ? 'bg-white text-slate-900' : 'bg-slate-950 text-blue-300'}>
+                <option key={key} value={key} className={key.includes('light') ? 'bg-white text-slate-900' : 'bg-black text-pink-300'}>
                   Theme: {t.name}
                 </option>
               ))}
             </select>
 
             <div className={`hidden sm:flex items-center space-x-1.5 text-xs px-3 py-1.5 rounded-full border ${theme.border} ${theme.bgCard} ${theme.textSecondary}`}>
-              <Zap className={`w-3.5 h-3.5 ${isSpiderman || isSpiderLight ? 'text-pink-600' : isBlueTheme ? 'text-blue-500' : 'text-pink-400'}`} />
+              <Zap className={`w-3.5 h-3.5 ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'text-pink-400'}`} />
               <span>Est. Tokens: <strong className="font-mono">{totalTokens}</strong></span>
             </div>
             <button onClick={() => createNewSession()} className={`text-xs flex items-center space-x-1.5 ${theme.bgCard} px-3 py-2 rounded-xl border ${theme.border} ${theme.textSecondary}`}>
@@ -720,227 +693,146 @@ STRICT FORMATTING RULES:
         {/* Scrollable Chat Feed Area */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-5">
+            <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-4">
               <div className={`p-4 ${theme.bgCard} border ${theme.border} rounded-2xl shadow-sm backdrop-blur-md`}>
-                <div className={`p-3 ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : isBlueTheme ? 'bg-blue-600 text-white' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white'} rounded-xl inline-flex shadow-sm`}>
-                  {isSpiderman || isSpiderLight ? <span className="text-xl font-bold">🕷️</span> : isBlueTheme ? <span className="text-xl font-bold">🔹</span> : <Sparkles className="w-6 h-6" />}
+                <div className={`p-3 ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white'} rounded-xl inline-flex shadow-sm`}>
+                  {isSpiderman || isSpiderLight ? <span className="text-xl font-bold">🕷️</span> : <Sparkles className="w-6 h-6" />}
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <h3 className={`text-base font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : isBlueTheme ? 'text-blue-500' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>
-                  Manifest your thoughts or choose one of the questions below
-                </h3>
+              <div>
+                <h3 className={`text-lg font-bold ${isSpiderman || isSpiderLight ? 'text-pink-700' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>What shall we manifest today?</h3>
+                <p className={`text-sm ${theme.textSecondary} mt-1`}>Pick a prompt below or type your question to get started.</p>
               </div>
-
-              {/* Vertical Stack of Larger Questions with Fading Gradient Outline */}
-              <div className="flex flex-col space-y-3 w-full pt-1">
-                {(MODE_PROMPTS[activeMode] || []).map((promptText, idx) => (
+              <div className="w-full space-y-2 pt-4">
+                {MODE_PROMPTS[activeMode]?.map((prompt, idx) => (
                   <button
                     key={idx}
-                    onClick={() => handleSendMessage(promptText)}
-                    style={{
-                      borderImage: 'linear-gradient(to right, rgba(236, 72, 153, 0.8), rgba(59, 130, 246, 0.4), transparent) 1',
-                      borderWidth: '1.5px',
-                      borderStyle: 'solid'
-                    }}
-                    className={`p-3.5 rounded-xl text-left ${theme.bgCard} hover:opacity-90 text-sm font-medium ${theme.textPrimary} transition-all shadow-sm flex items-center justify-between group`}
+                    onClick={() => handleSendMessage(prompt)}
+                    className={`w-full text-left p-3.5 rounded-xl ${theme.bgCard} border ${theme.border} text-xs font-medium transition-all flex items-center justify-between group hover:border-pink-500 backdrop-blur-md ${theme.textPrimary}`}
                   >
-                    <span>{promptText}</span>
-                    <ChevronRight className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity text-pink-500 shrink-0 ml-2" />
+                    <span>"{prompt}"</span>
+                    <ChevronRight className={`w-4 h-4 ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'text-pink-300 group-hover:text-pink-400'}`} />
                   </button>
                 ))}
               </div>
             </div>
           ) : (
-            messages.map((m, index) => (
-              <div key={index} className={`flex items-start space-x-3 max-w-3xl ${m.role === 'user' ? 'ml-auto flex-row-reverse space-x-reverse' : ''}`}>
-                <div className={`p-2 rounded-xl shrink-0 ${m.role === 'user' ? (isSpiderman || isSpiderLight ? 'bg-pink-600 text-white shadow-sm' : isBlueTheme ? 'bg-blue-600 text-white shadow-sm' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white') : (isSpiderman || isSpiderLight ? 'bg-black border border-pink-500 text-pink-400 shadow-sm' : isBlueTheme ? 'bg-slate-900 border border-blue-500 text-blue-400 shadow-sm' : `${theme.bgCard} ${theme.border} border text-pink-300`)}`}>
-                  {m.role === 'user' ? <User className="w-4 h-4" /> : (isSpiderman || isSpiderLight ? <span className="text-xs font-bold">🕷️</span> : isBlueTheme ? <span className="text-xs font-bold">🔹</span> : <Bot className="w-4 h-4" />)}
-                </div>
-
-                <div className={`group relative p-4 rounded-2xl border ${theme.border} ${m.role === 'user' ? (isSpiderman || isSpiderLight ? 'bg-pink-600 text-white border-pink-500 shadow-sm' : isBlueTheme ? 'bg-blue-600 text-white border-blue-500 shadow-sm' : 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-sm') : `${theme.bgCard} ${theme.textPrimary} shadow-sm backdrop-blur-md`} max-w-[80%] sm:max-w-[75%]`}>
-                  {m.image && (
-                    <div className="mb-3 rounded-xl overflow-hidden max-h-48 border border-white/20">
-                      <img src={m.image} alt="User Upload" className="w-full h-full object-cover" />
+            messages.map((msg, index) => (
+              <div key={index} className={`flex gap-3 sm:gap-4 max-w-3xl mx-auto ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                {msg.role === 'assistant' && (
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${msg.isError ? 'bg-pink-600/10 border-pink-600 text-pink-600' : `${theme.bgCard} ${theme.border}`}`}>
+                    {isSpiderman || isSpiderLight ? <span className="text-sm font-bold text-pink-600">🕷️</span> : <Sparkles className="w-4 h-4 text-pink-400" />}
+                  </div>
+                )}
+                <div className={`group relative max-w-[90%] sm:max-w-[85%] rounded-2xl p-3.5 sm:p-4 text-sm leading-relaxed border backdrop-blur-md ${
+                  msg.role === 'user'
+                    ? isSpiderman || isSpiderLight ? 'bg-pink-600 border-pink-500 text-white font-semibold rounded-tr-none shadow-sm' : 'bg-gradient-to-r from-pink-500 to-rose-500 border-pink-400 text-white rounded-tr-none'
+                    : msg.isError
+                    ? 'bg-pink-600/10 border-pink-600 text-pink-600 rounded-tl-none'
+                    : `${theme.bgCard} ${theme.border} ${theme.textPrimary} rounded-tl-none shadow-sm`
+                }`}>
+                  {msg.role === 'assistant' && (
+                    <div className={`flex items-center justify-between border-b ${theme.border} pb-2 mb-2 text-xs ${theme.textSecondary}`}>
+                      <span className={`font-mono text-[11px] font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 to-rose-300 bg-clip-text text-transparent'}`}>Nova AI</span>
+                      <button onClick={() => copyToClipboard(msg.content, index)} className="p-1 hover:opacity-80">
+                        {copiedIndex === index ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                      </button>
                     </div>
                   )}
-
-                  <div className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">
-                    {m.content}
-                  </div>
-
-                  <div className={`mt-2 flex items-center justify-between text-[10px] ${m.role === 'user' ? 'text-pink-100' : theme.textSecondary}`}>
-                    <span>{m.timestamp}</span>
-                    {m.role === 'assistant' && (
-                      <button 
-                        onClick={() => copyToClipboard(m.content, index)}
-                        className={`opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:${theme.bgCard}`}
-                        title="Copy text"
-                      >
-                        {copiedIndex === index ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
-                      </button>
-                    )}
-                  </div>
+                  {msg.image && (
+                    <div className="mb-3 overflow-hidden rounded-xl border border-pink-500/30">
+                      <img src={msg.image} alt="User attachment" className="max-h-60 w-auto object-cover" />
+                    </div>
+                  )}
+                  <div className="whitespace-pre-wrap font-sans text-sm">{msg.content}</div>
+                  <div className={`text-[10px] mt-2 text-right ${msg.role === 'user' ? 'text-pink-100' : theme.textSecondary}`}>{msg.timestamp}</div>
                 </div>
+                {msg.role === 'user' && (
+                  <div className={`w-8 h-8 rounded-xl ${theme.bgCard} border ${theme.border} flex items-center justify-center shrink-0`}>
+                    <User className={`w-4 h-4 ${isSpiderman || isSpiderLight ? 'text-pink-600' : ''}`} />
+                  </div>
+                )}
               </div>
             ))
           )}
 
           {isLoading && (
-            <div className="flex items-center space-x-3 max-w-3xl">
-              <div className={`p-2 rounded-xl ${isSpiderman || isSpiderLight ? 'bg-black border border-pink-500 text-pink-400' : isBlueTheme ? 'bg-slate-900 border border-blue-500 text-blue-400' : `${theme.bgCard} ${theme.border} border text-pink-300`}`}>
-                {isSpiderman || isSpiderLight ? <span className="text-xs font-bold">🕷️</span> : isBlueTheme ? <span className="text-xs font-bold">🔹</span> : <Bot className="w-4 h-4 animate-spin" />}
+            <div className="flex gap-4 max-w-3xl mx-auto items-center">
+              <div className={`w-8 h-8 rounded-xl ${theme.bgCard} border ${theme.border} flex items-center justify-center`}>
+                {isSpiderman || isSpiderLight ? <span className="text-sm font-bold text-pink-600">🕷️</span> : <Sparkles className="w-4 h-4 text-pink-400" />}
               </div>
-              <div className={`p-4 rounded-2xl border ${theme.border} ${theme.bgCard} ${theme.textPrimary} flex items-center space-x-2`}>
-                <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce"></span>
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce [animation-delay:0.2s]"></span>
-                <span className="w-2 h-2 rounded-full bg-indigo-400 animate-bounce [animation-delay:0.4s]"></span>
-                <span className="text-xs ml-2 opacity-70">Nova is weaving your answer...</span>
+              <div className={`${theme.bgCard} border ${theme.border} rounded-xl p-4 text-xs ${theme.textSecondary} flex items-center space-x-2 backdrop-blur-md`}>
+                <span className={`w-2 h-2 rounded-full ${isSpiderman || isSpiderLight ? 'bg-pink-600' : 'bg-pink-400'} animate-ping`}></span>
+                <span>Thinking...</span>
               </div>
             </div>
           )}
+
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Selected Image Preview Bar */}
-        {selectedImage && (
-          <div className={`px-4 py-2 border-t ${theme.border} ${theme.bgHeader} flex items-center justify-between z-10`}>
-            <div className="flex items-center space-x-2">
-              <img src={selectedImage} alt="Upload Preview" className="w-10 h-10 object-cover rounded-lg border border-blue-400/40" />
-              <span className={`text-xs ${theme.textPrimary} font-medium truncate`}>Image attached and ready to send</span>
-            </div>
-            <button 
-              onClick={() => setSelectedImage(null)}
-              className={`p-1 hover:${theme.bgCard} rounded-lg ${theme.textSecondary}`}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        )}
+        {/* Input Bar & Footer */}
+        <div className={`p-3 sm:p-4 border-t ${theme.border} ${theme.bgHeader} backdrop-blur-md`}>
+          <div className="max-w-3xl mx-auto space-y-2">
+            
+            <input type="file" ref={fileInputRef} accept="image/*" onChange={handleImageSelect} className="hidden" />
 
-        {/* Input Bar */}
-        <div className={`p-4 sm:p-6 border-t ${theme.border} ${theme.bgHeader} backdrop-blur-md z-10`}>
-          <div className={`max-w-4xl mx-auto flex items-end space-x-2 p-2 rounded-2xl border ${theme.border} ${theme.bgInput} shadow-lg backdrop-blur-md`}>
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              onChange={handleImageSelect} 
-              accept="image/*" 
-              className="hidden" 
-            />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className={`p-2.5 rounded-xl hover:${theme.bgCard} ${theme.textSecondary} transition-colors shrink-0`}
-              title="Upload Image"
-            >
-              <Paperclip className="w-5 h-5" />
-            </button>
-
-            <textarea
-              ref={textareaRef}
-              rows={1}
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSendMessage();
-                }
-              }}
-              placeholder="Sparkle your thoughts here.."
-              className={`flex-1 bg-transparent border-none focus:outline-none ${theme.textPrimary} placeholder:text-blue-400/50 text-xs sm:text-sm resize-none max-h-32 py-2 px-1`}
-            />
-
-            <button
-              onClick={() => handleSendMessage()}
-              disabled={(!inputMessage.trim() && !selectedImage) || isLoading}
-              className={`p-2.5 rounded-xl ${(!inputMessage.trim() && !selectedImage) || isLoading ? 'opacity-40 cursor-not-allowed' : 'hover:scale-105'} ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white shadow-sm' : isBlueTheme ? 'bg-blue-600 text-white shadow-sm' : 'bg-gradient-to-r from-pink-500 to-rose-500 text-white'} transition-all shrink-0`}
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="text-center mt-2">
-            <p className={`text-[10px] ${theme.textSecondary}`}>
-              Nova AI can make mistakes. Verify critical facts and math equations.
-            </p>
-          </div>
-        </div>
-      </main>
-
-      {/* Settings Modal */}
-      {showSettings && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className={`w-full max-w-md ${theme.bgCard} border ${theme.border} rounded-2xl shadow-2xl overflow-hidden p-6 space-y-6`}>
-            <div className="flex items-center justify-between border-b pb-4 border-blue-500/20">
-              <div className="flex items-center space-x-2">
-                <div className={`p-2 ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : isBlueTheme ? 'bg-blue-600 text-white' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white'} rounded-xl`}>
-                  <Settings className="w-4 h-4" />
-                </div>
-                <h3 className={`font-bold text-sm ${theme.textPrimary}`}>Settings & Configuration</h3>
+            {selectedImage && (
+              <div className="relative inline-block mb-1">
+                <img src={selectedImage} alt="Attachment preview" className="w-16 h-16 object-cover rounded-xl border border-pink-500/40 shadow-md" />
+                <button onClick={() => setSelectedImage(null)} className="absolute -top-2 -right-2 bg-pink-600 text-white rounded-full p-1 text-xs">
+                  <X className="w-3 h-3" />
+                </button>
               </div>
-              <button onClick={() => setShowSettings(false)} className={`p-1.5 rounded-xl hover:${theme.bgInput} ${theme.textSecondary}`}>
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+            )}
 
-            <div className="space-y-4">
-              <div>
-                <label className={`text-xs font-semibold ${theme.textSecondary} mb-2 block`}>Groq AI Engine Model</label>
-                <select
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value)}
-                  className={`w-full p-2.5 text-xs rounded-xl border ${theme.border} ${theme.bgInput} ${theme.textPrimary} font-medium focus:outline-none`}
-                >
-                  {GROQ_MODELS.map(m => (
-                    <option key={m.id} value={m.id}>{m.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <label className={`text-xs font-semibold ${theme.textSecondary}`}>Max Response Tokens</label>
-                  <span className={`text-xs font-mono font-bold ${theme.textPrimary}`}>{maxTokens}</span>
-                </div>
-                <input
-                  type="range"
-                  min="100"
-                  max="2000"
-                  step="50"
-                  value={maxTokens}
-                  onChange={(e) => setMaxTokens(Number(e.target.value))}
-                  className="w-full accent-blue-500 cursor-pointer"
-                />
-              </div>
-
-              <div>
-                <label className={`text-xs font-semibold ${theme.textSecondary} mb-2 block`}>Interface Theme</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(THEMES).map(([key, t]) => (
-                    <button
-                      key={key}
-                      onClick={() => setCurrentThemeKey(key)}
-                      className={`p-2.5 rounded-xl border text-xs font-semibold text-left transition-all ${currentThemeKey === key ? 'border-blue-500 bg-blue-500/10 text-blue-500 shadow-sm' : `${theme.border} ${theme.textSecondary}`}`}
-                    >
-                      {t.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2 border-t border-blue-500/20 flex justify-end">
+            <div className={`relative flex items-center ${theme.bgInput} border ${theme.border} focus-within:border-pink-500 rounded-2xl p-2 transition-all shadow-sm backdrop-blur-md`}>
               <button
-                onClick={() => setShowSettings(false)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : isBlueTheme ? 'bg-blue-600 text-white' : 'bg-gradient-to-r from-pink-500 to-rose-500 text-white'} shadow-sm`}
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className={`p-2 rounded-xl ${theme.textSecondary} hover:text-pink-600 transition-colors`}
+                title="Attach Image"
               >
-                Save Settings
+                <Paperclip className="w-4 h-4" />
+              </button>
+
+              <textarea
+                ref={textareaRef}
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
+                placeholder={`Ask ${MODES.find(m => m.id === activeMode)?.name} anything...`}
+                rows={1}
+                className={`flex-1 bg-transparent border-none focus:outline-none ${theme.textPrimary} placeholder:text-slate-400 text-sm px-3 resize-none max-h-32`}
+              />
+
+              <button
+                type="button"
+                onClick={() => handleSendMessage()}
+                disabled={isLoading || (!inputMessage.trim() && !selectedImage)}
+                className={`p-2.5 rounded-xl ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : 'bg-gradient-to-r from-pink-500 to-rose-500 text-white'} font-medium shadow-sm transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed`}
+              >
+                <Send className="w-4 h-4" />
               </button>
             </div>
+
+            {/* Footer with Made by Areesha Riaz */}
+            <div className="flex items-center justify-between px-2 text-[12px]">
+              <span className={theme.textSecondary}>Enter to send, Shift+Enter for newline</span>
+              <span className="font-semibold flex items-center gap-1">
+                Made by <span className={`font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Areesha Riaz</span>
+              </span>
+            </div>
+
           </div>
         </div>
-      )}
+
+      </main>
     </div>
   );
 }
