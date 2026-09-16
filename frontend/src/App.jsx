@@ -899,7 +899,7 @@ STRICT FORMATTING RULES:
                     handleSendMessage();
                   }
                 }}
-                placeholder={`Sparkle ${MODES.find(m => m.id === activeMode)?.name} your thoughts here...`}
+                placeholder={`Sparkle ${MODES.find(m => m.id === activeMode)?.name || ''} your thoughts here...`}
                 rows={1}
                 className={`flex-1 bg-transparent border-none focus:outline-none ${theme.textPrimary} placeholder:text-slate-400 text-sm px-3 resize-none max-h-32`}
               />
