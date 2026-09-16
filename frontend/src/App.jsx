@@ -812,7 +812,7 @@ STRICT FORMATTING RULES:
             <div className="flex items-center justify-between px-2 text-[12px]">
               <span className={theme.textSecondary}>Enter to send, Shift+Enter for newline</span>
               <span className="font-semibold flex items-center gap-1">
-                Made by <span className={`font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Areesha Riaz</span>
+                Made by <span className={`font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Areesha</span>
               </span>
             </div>
 
