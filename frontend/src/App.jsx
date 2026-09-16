@@ -161,12 +161,14 @@ const ThemeBackground = ({ themeKey }) => {
 
   if (themeKey === 'spiderlight') {
     return (
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 bg-gradient-to-br from-pink-50 via-white to-rose-50">
-        {/* Random scattered webs across light background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {SPIDER_LIGHT_CUSTOM_BG && (
+          <div className="absolute inset-0 bg-cover bg-center opacity-85" style={{ backgroundImage: `url(${SPIDER_LIGHT_CUSTOM_BG})` }} />
+        )}
+        <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px]" />
         <div className="absolute top-[10%] left-[20%] text-pink-400/35 w-20 h-20 rotate-12"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute top-[40%] right-[12%] text-rose-400/30 w-28 h-28 -rotate-30"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute bottom-[25%] left-[15%] text-pink-500/30 w-24 h-24 rotate-45"><SpiderWebIcon className="w-full h-full" /></div>
-        <div className="absolute top-[70%] right-[30%] text-pink-400/25 w-16 h-16 rotate-[75deg]"><SpiderWebIcon className="w-full h-full" /></div>
       </div>
     );
   }
