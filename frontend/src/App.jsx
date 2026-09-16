@@ -77,8 +77,8 @@ const THEMES = {
     bgSidebar: 'bg-slate-900',
     bgHeader: 'bg-slate-900/40',
     border: 'border-blue-500/40',
-    textPrimary: 'text-blue-200 font-semibold',
-    textSecondary: 'text-blue-300/70',
+    textPrimary: 'text-blue-400 font-semibold', // Average dark blue (bright enough to read clearly)
+    textSecondary: 'text-blue-300/80',
     bgCard: 'bg-slate-900/80',
     bgInput: 'bg-slate-950/90',
   },
@@ -88,12 +88,11 @@ const THEMES = {
     bgSidebar: 'bg-white/95',
     bgHeader: 'bg-white/85',
     border: 'border-blue-300/60',
-    textPrimary: 'text-slate-900 font-semibold',
-    textSecondary: 'text-blue-800/70',
+    textPrimary: 'text-blue-600 font-semibold', // Lighter, clean blue for light mode
+    textSecondary: 'text-blue-500/80',
     bgCard: 'bg-white/90',
     bgInput: 'bg-white',
-  }
-};
+  },
 
 const MODES = [
   { id: 'qa', name: 'Q&A Assistant', icon: MessageSquare, color: 'from-pink-400 to-rose-400', desc: 'Direct, to-the-point concise answers' },
@@ -209,23 +208,42 @@ const ThemeBackground = ({ themeKey }) => {
     );
   };
   JavaScript
-const SparkleEffect = ({ isBlueTheme }) => {
-  // Add your particle generation state/logic hook here (e.g., handling mouse coordinates)
-  
+const SparkleEffect = ({ isSpiderman, isSpiderLight, isBlueTheme }) => {
+  // ... (keep your mousemove and click listener logic here)
+
+  // Inside your particle generation (where color is assigned):
+  const color = isBlueTheme 
+    ? ['#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#ffffff'][Math.floor(Math.random() * 5)] // Blue bubble/glitter shades
+    : isSpiderman 
+    ? ['#ec4899', '#f472b6', '#ffffff'][Math.floor(Math.random() * 3)] 
+    : ['#f472b6', '#fb7185', '#e879f9'][Math.floor(Math.random() * 3)];
+
+  // ... (inside your map return JSX where the particle renders):
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-      {/* Example particle render block */}
-      {/* When isBlueTheme is true, render the blue diamond sparkle with a glow */}
-      {isBlueTheme ? (
-        <span 
-          className="absolute text-sm drop-shadow-[0_0_8px_rgba(59,130,246,0.9)] animate-ping"
-          style={{ 
-            color: ['#3b82f6', '#60a5fa', '#38bdf8', '#93c5fd', '#ffffff'][Math.floor(Math.random() * 5)] 
+    <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+      {sparkles.map(sparkle => (
+        <div
+          key={sparkle.id}
+          className="absolute pointer-events-none transition-transform duration-75"
+          style={{
+            left: `${sparkle.x}px`,
+            top: `${sparkle.y}px`,
+            width: `${sparkle.size}px`,
+            height: `${sparkle.size}px`,
+            transform: `translate(-50%, -50%) rotate(${sparkle.rotation}deg)`,
+            color: sparkle.color,
+            opacity: sparkle.opacity,
           }}
         >
-          🔹
-        </span>
-      ) : null}
+          {isSpiderman || isSpiderLight ? (
+            <span className="text-sm drop-shadow-[0_0_6px_rgba(236,72,153,0.9)]">🕷️</span>
+          ) : isBlueTheme ? (
+            <span className="text-xs drop-shadow-[0_0_8px_rgba(59,130,246,0.9)]">🔵</span>
+          ) : (
+            <Sparkles className="w-full h-full" />
+          )}
+        </div>
+      ))}
     </div>
   );
 };
