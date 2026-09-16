@@ -10,9 +10,7 @@ import {
 // ==========================================
 import myCustomJpegBg from './my-background.jpeg';
 
-
 const SPIDERMAN_CUSTOM_BG = myCustomJpegBg; 
-
 
 const THEMES = {
   bluedark: {
@@ -38,16 +36,16 @@ const THEMES = {
     bgInput: 'bg-white',
   },
   spiderlight: {
-  name: 'Pink & White Spider (Light)',
-  bgMain: 'bg-pink-50/50',
-  bgSidebar: 'bg-white/95',
-  bgHeader: 'bg-white/85',
-  border: 'border-pink-300/60',
-  textPrimary: 'text-slate-900 font-semibold',
-  textSecondary: 'text-pink-800/70',
-  bgCard: 'bg-white/90',
-  bgInput: 'bg-white',
-},
+    name: 'Pink & White Spider (Light)',
+    bgMain: 'bg-pink-50/50',
+    bgSidebar: 'bg-white/95',
+    bgHeader: 'bg-white/85',
+    border: 'border-pink-300/60',
+    textPrimary: 'text-slate-900 font-semibold',
+    textSecondary: 'text-pink-800/70',
+    bgCard: 'bg-white/90',
+    bgInput: 'bg-white',
+  },
   dark: {
     name: 'Dark Slate',
     bgMain: 'bg-slate-950',
@@ -131,23 +129,19 @@ const estimateTokens = (text) => {
   return Math.ceil(text.trim().split(/\s+/).length * 1.3);
 };
 
-// Exact Spider Web SVG from your Screenshot
+// Exact Spider Web SVG
 const SpiderWebIcon = ({ className = "w-10 h-10" }) => (
   <svg className={className} viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg">
-    {/* Radial strands */}
     <line x1="50" y1="0" x2="50" y2="100" strokeOpacity="0.6" />
     <line x1="0" y1="50" x2="100" y2="50" strokeOpacity="0.6" />
     <line x1="15" y1="15" x2="85" y2="85" strokeOpacity="0.6" />
     <line x1="85" y1="15" x2="15" y2="85" strokeOpacity="0.6" />
-    
-    {/* Concentric curved web loops */}
     <path d="M 50 30 Q 60 40 70 50 Q 60 60 50 70 Q 40 60 30 50 Q 40 40 50 30 Z" strokeOpacity="0.7" />
     <path d="M 50 15 Q 67 33 85 50 Q 67 67 50 85 Q 33 67 15 50 Q 33 33 50 15 Z" strokeOpacity="0.5" />
     <path d="M 50 5 Q 75 25 95 50 Q 75 75 50 95 Q 25 75 5 50 Q 25 25 50 5 Z" strokeOpacity="0.3" />
   </svg>
 );
 
-// Dynamic Background Component handling themes, spider layouts, and blue bubbles
 const ThemeBackground = ({ themeKey }) => {
   if (themeKey === 'spiderman') {
     return (
@@ -159,8 +153,6 @@ const ThemeBackground = ({ themeKey }) => {
           />
         ) : null}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
-        
-        {/* Random scattered webs across dark background */}
         <div className="absolute top-[8%] left-[25%] text-pink-500/40 w-16 h-16 rotate-12"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute top-[35%] right-[15%] text-pink-400/30 w-24 h-24 -rotate-45"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute bottom-[20%] left-[30%] text-pink-500/35 w-20 h-20 rotate-90"><SpiderWebIcon className="w-full h-full" /></div>
@@ -172,7 +164,6 @@ const ThemeBackground = ({ themeKey }) => {
   if (themeKey === 'spiderlight') {
     return (
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 bg-gradient-to-br from-pink-50 via-white to-rose-50">
-        {/* Random scattered webs across light background */}
         <div className="absolute top-[10%] left-[20%] text-pink-400/35 w-20 h-20 rotate-12"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute top-[40%] right-[12%] text-rose-400/30 w-28 h-28 -rotate-30"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute bottom-[25%] left-[15%] text-pink-500/30 w-24 h-24 rotate-45"><SpiderWebIcon className="w-full h-full" /></div>
@@ -184,7 +175,6 @@ const ThemeBackground = ({ themeKey }) => {
   if (themeKey === 'bluedark' || themeKey === 'bluelight') {
     return (
       <div className={`absolute inset-0 overflow-hidden pointer-events-none z-0 ${themeKey === 'bluedark' ? 'bg-slate-950' : 'bg-gradient-to-br from-blue-50 via-white to-cyan-50'}`}>
-        {/* Floating background bubbles */}
         <div className="absolute top-[15%] left-[10%] w-24 h-24 rounded-full bg-blue-400/10 blur-xl animate-pulse" />
         <div className="absolute top-[60%] right-[15%] w-36 h-36 rounded-full bg-cyan-400/15 blur-2xl animate-pulse [animation-delay:1s]" />
         <div className="absolute bottom-[20%] left-[25%] w-20 h-20 rounded-full bg-blue-500/10 blur-lg animate-pulse [animation-delay:2s]" />
@@ -196,7 +186,6 @@ const ThemeBackground = ({ themeKey }) => {
   return null;
 };
 
-// Smooth Sparkle / Spider / Blue Glitter Trail Effect
 const SparkleEffect = ({ isSpiderman, isSpiderLight, isBlueTheme }) => {
   const [sparkles, setSparkles] = useState([]);
   const requestRef = useRef(null);
@@ -529,20 +518,16 @@ STRICT FORMATTING RULES:
   return (
     <div className={`flex h-screen w-full ${theme.bgMain} font-sans antialiased overflow-hidden transition-colors duration-200 relative`}>
       
-      {/* Sparkle / Glitter Trail Effect */}
       <SparkleEffect isSpiderman={isSpiderman} isSpiderLight={isSpiderLight} isBlueTheme={isBlueTheme} />
-
-      {/* Dynamic Theme Background */}
       <ThemeBackground themeKey={currentThemeKey} />
 
       {isMobileMenuOpen && (
         <div onClick={() => setIsMobileMenuOpen(false)} className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden" />
       )}
 
-      {/* Sidebar with Theme Accents */}
+      {/* Sidebar */}
       <aside className={`fixed md:relative inset-y-0 left-0 z-40 w-80 ${theme.bgSidebar} border-r ${theme.border} flex flex-col justify-between shrink-0 transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} overflow-hidden`}>
         
-        {/* Random Scattered Elements Overlay in Sidebar */}
         {(isSpiderman || isSpiderLight) && (
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-30 select-none">
             <div className="absolute top-[10%] left-[5%] w-16 h-16 rotate-12 text-pink-600"><SpiderWebIcon className="w-full h-full" /></div>
@@ -608,7 +593,6 @@ STRICT FORMATTING RULES:
             </div>
           </div>
 
-          {/* Active Chat Tab */}
           <div className="p-4 pb-2 space-y-2">
             <label className={`text-xs font-semibold uppercase tracking-wider ${theme.textSecondary} block`}>Current Journey</label>
             <div className={`flex items-center justify-between p-2.5 rounded-xl border ${theme.border} ${theme.bgCard} font-medium text-xs shadow-sm ${isSpiderman || isSpiderLight || isBlueTheme ? 'text-slate-800 font-semibold dark:text-blue-200' : ''}`}>
@@ -626,7 +610,6 @@ STRICT FORMATTING RULES:
             </button>
           </div>
 
-          {/* History */}
           <div className="flex-1 overflow-y-auto px-4 py-2 space-y-1">
             <div className="flex items-center justify-between mb-2 px-1">
               <button 
@@ -675,7 +658,7 @@ STRICT FORMATTING RULES:
             )}
           </div>
 
-          <div className={`p-4 border-t ${theme.border}`}>
+          <div className={`p-4 border-t ${theme.border} space-y-2`}>
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center space-x-2">
                 <span className={`w-2 h-2 rounded-full ${isSpiderman || isSpiderLight ? 'bg-pink-600' : isBlueTheme ? 'bg-blue-500' : 'bg-emerald-500'} animate-pulse`}></span>
@@ -684,6 +667,9 @@ STRICT FORMATTING RULES:
               <button onClick={() => { setShowSettings(!showSettings); setIsMobileMenuOpen(false); }} className={`p-1.5 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="Settings">
                 <Settings className="w-4 h-4" />
               </button>
+            </div>
+            <div className={`text-[10px] text-center ${theme.textSecondary} opacity-80 pt-1 border-t border-blue-500/10`}>
+              Made by Areesha
             </div>
           </div>
         </div>
@@ -708,7 +694,6 @@ STRICT FORMATTING RULES:
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Theme Selector Dropdown */}
             <select
               value={currentThemeKey}
               onChange={(e) => setCurrentThemeKey(e.target.value)}
@@ -735,7 +720,7 @@ STRICT FORMATTING RULES:
         {/* Scrollable Chat Feed Area */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-4">
+            <div className="h-full flex flex-col items-center justify-center text-center max-w-lg mx-auto space-y-5">
               <div className={`p-4 ${theme.bgCard} border ${theme.border} rounded-2xl shadow-sm backdrop-blur-md`}>
                 <div className={`p-3 ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white' : isBlueTheme ? 'bg-blue-600 text-white' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white'} rounded-xl inline-flex shadow-sm`}>
                   {isSpiderman || isSpiderLight ? <span className="text-xl font-bold">🕷️</span> : isBlueTheme ? <span className="text-xl font-bold">🔹</span> : <Sparkles className="w-6 h-6" />}
@@ -744,22 +729,25 @@ STRICT FORMATTING RULES:
 
               <div className="space-y-2">
                 <h3 className={`text-base font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : isBlueTheme ? 'text-blue-500' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>
-                  Hello, I am Nova
+                  Manifest your thoughts or choose one of the questions below
                 </h3>
-                <p className={`text-xs ${theme.textSecondary}`}>
-                  Select a quick prompt below or type your message to begin your journey.
-                </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full pt-2">
+              {/* Vertical Stack of Larger Questions with Fading Gradient Outline */}
+              <div className="flex flex-col space-y-3 w-full pt-1">
                 {(MODE_PROMPTS[activeMode] || []).map((promptText, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(promptText)}
-                    className={`p-3 rounded-xl text-left border ${theme.border} ${theme.bgCard} hover:border-pink-400 text-xs ${theme.textPrimary} transition-all shadow-sm flex items-center justify-between group`}
+                    style={{
+                      borderImage: 'linear-gradient(to right, rgba(236, 72, 153, 0.8), rgba(59, 130, 246, 0.4), transparent) 1',
+                      borderWidth: '1.5px',
+                      borderStyle: 'solid'
+                    }}
+                    className={`p-3.5 rounded-xl text-left ${theme.bgCard} hover:opacity-90 text-sm font-medium ${theme.textPrimary} transition-all shadow-sm flex items-center justify-between group`}
                   >
-                    <span className="truncate">{promptText}</span>
-                    <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-pink-500 shrink-0 ml-1" />
+                    <span>{promptText}</span>
+                    <ChevronRight className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity text-pink-500 shrink-0 ml-2" />
                   </button>
                 ))}
               </div>
@@ -860,7 +848,7 @@ STRICT FORMATTING RULES:
                   handleSendMessage();
                 }
               }}
-              placeholder={`Ask Nova anything in ${activeMode.toUpperCase()} mode...`}
+              placeholder="Sparkle your thoughts here.."
               className={`flex-1 bg-transparent border-none focus:outline-none ${theme.textPrimary} placeholder:text-blue-400/50 text-xs sm:text-sm resize-none max-h-32 py-2 px-1`}
             />
 
