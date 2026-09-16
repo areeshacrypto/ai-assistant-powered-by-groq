@@ -9,10 +9,10 @@ import {
 // 🎨 YOUR LOCAL JPEG BACKGROUND SETUP
 // ==========================================
 import myCustomJpegBg from './my-background.jpeg';
-import whiteSpiderBg from './white.png';
+
 
 const SPIDERMAN_CUSTOM_BG = myCustomJpegBg; 
-const SPIDERMAN_LIGHT_BG = whiteSpiderBg;
+
 
 const THEMES = {
   spiderlight: {
