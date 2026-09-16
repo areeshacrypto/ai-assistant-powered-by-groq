@@ -9,10 +9,11 @@ import {
 // 🎨 YOUR LOCAL JPEG BACKGROUND SETUP
 // ==========================================
 import myCustomJpegBg from './my-background.jpeg';
+import whiteSpiderBg from './white.png.jpeg';
 
 
 const SPIDERMAN_CUSTOM_BG = myCustomJpegBg; 
-
+const SPIDER_LIGHT_CUSTOM_BG = whiteSpiderBg;
 
 const THEMES = {
   spiderlight: {
@@ -67,6 +68,28 @@ const THEMES = {
     border: 'border-pink-300/60',
     textPrimary: 'text-slate-900 font-semibold',
     textSecondary: 'text-pink-800/70',
+    bgCard: 'bg-white/90',
+    bgInput: 'bg-white',
+  },
+  bluedark: {
+    name: 'Electric Blue (Dark)',
+    bgMain: 'bg-slate-950',
+    bgSidebar: 'bg-slate-900',
+    bgHeader: 'bg-slate-900/40',
+    border: 'border-blue-500/40',
+    textPrimary: 'text-blue-200 font-semibold',
+    textSecondary: 'text-blue-300/70',
+    bgCard: 'bg-slate-900/80',
+    bgInput: 'bg-slate-950/90',
+  },
+  bluelight: {
+    name: 'Electric Blue (Light)',
+    bgMain: 'bg-blue-50/50',
+    bgSidebar: 'bg-white/95',
+    bgHeader: 'bg-white/85',
+    border: 'border-blue-300/60',
+    textPrimary: 'text-slate-900 font-semibold',
+    textSecondary: 'text-blue-800/70',
     bgCard: 'bg-white/90',
     bgInput: 'bg-white',
   }
@@ -162,10 +185,26 @@ const ThemeBackground = ({ themeKey }) => {
     return (
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 bg-gradient-to-br from-pink-50 via-white to-rose-50">
         {/* Random scattered webs across light background */}
+        {SPIDER_LIGHT_CUSTOM_BG ? (
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-85" 
+            style={{ backgroundImage: `url(${SPIDER_LIGHT_CUSTOM_BG})` }}
+          />
+        ) : null}
         <div className="absolute top-[10%] left-[20%] text-pink-400/35 w-20 h-20 rotate-12"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute top-[40%] right-[12%] text-rose-400/30 w-28 h-28 -rotate-30"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute bottom-[25%] left-[15%] text-pink-500/30 w-24 h-24 rotate-45"><SpiderWebIcon className="w-full h-full" /></div>
         <div className="absolute top-[70%] right-[30%] text-pink-400/25 w-16 h-16 rotate-[75deg]"><SpiderWebIcon className="w-full h-full" /></div>
+      </div>
+    );
+  }
+  if (themeKey === 'bluedark' || themeKey === 'bluelight') {
+    return (
+      <div className={`absolute inset-0 overflow-hidden pointer-events-none z-0 ${themeKey === 'bluedark' ? 'bg-slate-950' : 'bg-gradient-to-br from-blue-50 via-white to-cyan-50'}`}>
+        <div className="absolute top-[15%] left-[10%] w-24 h-24 rounded-full bg-blue-400/10 blur-xl animate-pulse" />
+        <div className="absolute top-[60%] right-[15%] w-36 h-36 rounded-full bg-cyan-400/15 blur-2xl animate-pulse [animation-delay:1s]" />
+        <div className="absolute bottom-[20%] left-[25%] w-20 h-20 rounded-full bg-blue-500/10 blur-lg animate-pulse [animation-delay:2s]" />
+        <div className="absolute top-[30%] right-[30%] w-16 h-16 rounded-full bg-indigo-400/15 blur-xl animate-pulse [animation-delay:1.5s]" />
       </div>
     );
   }
