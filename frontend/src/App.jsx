@@ -9,10 +9,23 @@ import {
 // 🎨 YOUR LOCAL JPEG BACKGROUND SETUP
 // ==========================================
 import myCustomJpegBg from './my-background.jpeg';
+import whiteSpiderBg from './white.png';
 
 const SPIDERMAN_CUSTOM_BG = myCustomJpegBg; 
+const SPIDERMAN_LIGHT_BG = whiteSpiderBg;
 
 const THEMES = {
+  spiderlight: {
+  name: 'Pink & White Spider (Light)',
+  bgMain: 'bg-pink-50/50',
+  bgSidebar: 'bg-white/95',
+  bgHeader: 'bg-white/85',
+  border: 'border-pink-300/60',
+  textPrimary: 'text-slate-900 font-semibold',
+  textSecondary: 'text-pink-800/70',
+  bgCard: 'bg-white/90',
+  bgInput: 'bg-white',
+},
   dark: {
     name: 'Dark Slate',
     bgMain: 'bg-slate-950',
@@ -132,6 +145,7 @@ const ThemeBackground = ({ themeKey }) => {
           <div 
             className="absolute inset-0 bg-cover bg-center opacity-85" 
             style={{ backgroundImage: `url(${SPIDERMAN_CUSTOM_BG})` }}
+            
           />
         ) : null}
         <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
