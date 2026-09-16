@@ -207,7 +207,43 @@ const ThemeBackground = ({ themeKey }) => {
         <div className="absolute top-[30%] right-[30%] w-16 h-16 rounded-full bg-indigo-400/15 blur-xl animate-pulse [animation-delay:1.5s]" />
       </div>
     );
-  }
+  };
+  JavaScript
+const SparkleEffect = ({ isBlueTheme }) => {
+  // Add your particle generation state/logic hook here (e.g., handling mouse coordinates)
+  
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+      {/* Example particle render block */}
+      {/* When isBlueTheme is true, render the blue diamond sparkle with a glow */}
+      {isBlueTheme ? (
+        <span 
+          className="absolute text-sm drop-shadow-[0_0_8px_rgba(59,130,246,0.9)] animate-ping"
+          style={{ 
+            color: ['#3b82f6', '#60a5fa', '#38bdf8', '#93c5fd', '#ffffff'][Math.floor(Math.random() * 5)] 
+          }}
+        >
+          🔹
+        </span>
+      ) : null}
+    </div>
+  );
+};
+const ThemeBackground = ({ themeKey }) => {
+  const isBlueTheme = themeKey === 'bluedark' || themeKey === 'bluelight';
+
+  if (!isBlueTheme) return null;
+
+  return (
+    <div className={`absolute inset-0 overflow-hidden pointer-events-none z-0 ${themeKey === 'bluedark' ? 'bg-slate-950' : 'bg-gradient-to-br from-blue-50 via-white to-cyan-50'}`}>
+      {/* Randomized floating glowing bubbles */}
+      <div className="absolute top-[15%] left-[10%] w-24 h-24 rounded-full bg-blue-400/10 blur-xl animate-pulse" />
+      <div className="absolute top-[60%] right-[15%] w-36 h-36 rounded-full bg-cyan-400/15 blur-2xl animate-pulse [animation-delay:1s]" />
+      <div className="absolute bottom-[20%] left-[25%] w-20 h-20 rounded-full bg-blue-500/10 blur-lg animate-pulse [animation-delay:2s]" />
+      <div className="absolute top-[30%] right-[30%] w-16 h-16 rounded-full bg-indigo-400/15 blur-xl animate-pulse [animation-delay:1.5s]" />
+    </div>
+  );
+};
 
   return null;
 };
