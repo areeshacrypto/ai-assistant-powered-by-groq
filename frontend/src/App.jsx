@@ -388,7 +388,7 @@ export default function App() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    document.title = "Tinker- Your Whimsy Chat Companion";
+    document.title = "Tink- Your Whimsy Chat Companion";
   }, []);
 
   useEffect(() => {
