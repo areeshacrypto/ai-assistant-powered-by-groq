@@ -388,7 +388,7 @@ export default function App() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    document.title = "Tink- Your Whimsy Chat Companion";
+    document.title = "Tink- AI";
   }, []);
 
   useEffect(() => {
@@ -590,7 +590,7 @@ STRICT FORMATTING RULES:
               <div className={`p-2 ${isSpiderman || isSpiderLight ? 'bg-pink-600 text-white shadow-sm' : 'bg-gradient-to-r from-pink-400 to-rose-400 text-white'} rounded-xl shadow-sm flex items-center justify-center`}>
                 {isSpiderman || isSpiderLight ? <span className="text-base font-bold">🕷️</span> : <Sparkles className="w-5 h-5" />}
               </div>
-              <h1 className={`font-bold text-base tracking-wide ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Nova AI</h1>
+              <h1 className={`font-bold text-base tracking-wide ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'}`}>Tink- AI</h1>
             </div>
             <div className="flex items-center space-x-1">
               <button onClick={() => createNewSession()} className={`p-2 hover:${theme.bgCard} rounded-xl ${theme.textSecondary} transition-colors`} title="New Whimsy Journey">
@@ -730,7 +730,7 @@ STRICT FORMATTING RULES:
             </div>
             <div>
               <h2 className={`text-sm font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 via-pink-200 to-rose-300 bg-clip-text text-transparent'} flex items-center gap-1`}>
-                Nova ({MODES.find(m => m.id === activeMode)?.name})
+                Tink- AI ({MODES.find(m => m.id === activeMode)?.name})
               </h2>
               <p className={`text-xs ${theme.textSecondary} hidden sm:block`}>Model: <span className="font-mono">{selectedModel}</span></p>
             </div>
@@ -804,7 +804,7 @@ STRICT FORMATTING RULES:
                 }`}>
                   {msg.role === 'assistant' && (
                     <div className={`flex items-center justify-between border-b ${theme.border} pb-2 mb-2 text-xs ${theme.textSecondary}`}>
-                      <span className={`font-mono text-[11px] font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 to-rose-300 bg-clip-text text-transparent'}`}>Nova AI</span>
+                      <span className={`font-mono text-[11px] font-bold ${isSpiderman || isSpiderLight ? 'text-pink-600' : 'bg-gradient-to-r from-pink-300 to-rose-300 bg-clip-text text-transparent'}`}>Tink AI</span>
                       <button onClick={() => copyToClipboard(msg.content, index)} className="p-1 hover:opacity-80">
                         {copiedIndex === index ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                       </button>
