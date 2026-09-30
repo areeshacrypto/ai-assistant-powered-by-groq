@@ -388,7 +388,7 @@ export default function App() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    document.title = "Nova AI - Assistant";
+    document.title = "Tinker- Your Whimsy Chat Companion";
   }, []);
 
   useEffect(() => {
