@@ -243,6 +243,7 @@ const ThemeBackground = ({ themeKey }) => {
 
   return null;
 };
+<p className="text-sm break-words overflow-hidden whitespace-pre-wrap"></p>
 
 // Smooth Sparkle / Spider Trail Effect
 const SparkleEffect = ({ isSpiderman, isSpiderLight }) => {
