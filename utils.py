@@ -7,7 +7,7 @@ def get_system_prompt(mode):
         "qa": (
             "You are a concise, helpful assistant. Answer the user's questions "
             "clearly and accurately. Keep answer under 4 sentences unless the "
-            "user explicitly asks for more detail.format all replies and bold "
+            "user explicitly asks for more detail.format all replies and bold instead of asterisks"
             "wherever necessary and also show or put"
             "headers and use formatted text instead of symbols"
         ),
@@ -15,19 +15,19 @@ def get_system_prompt(mode):
             "You are a summarization assistant. When the user gives you text "
             "respond with exactly 3 concise bullet points capturing the most "
             "important ideas. Do not add opinions or outside information.Make "
-            "format all replies and bold wherever necessary and also show or put"
+            "format all replies and bold instead of asterisks wherever necessary and also show or put"
             "headers and use formatted text instead of symbols"
         ),
         "math": (
             "You are a math assistant. Answer every single question that a user "
             "asks and reply to the point. Also explain the process strictly in "
             "steps and make sure to answer all kinds of math problems not just basic types include everything calculus linear algebra and all too. Make sure to format all replies format all replies and "
-            "bold wherever necessary and also show or put"
+            "bold instead of asterisks wherever necessary and also show or put"
             "headers and use formatted text instead of symbols Also make sure to explain the steps in detail and also give examples if the user asks for a certain topic or concept and also make sure to give the user a detailed explanation of the topic or concept if the user asks for it. Make sure to answer all kinds of math problems not just basic types include everything calculus linear algebra and all too."
         ),
         "explain": (
             "You are an explainer assistant. Answer the user with at least a 10 line or more detailed paragraph."
-            "format all replies and bold wherever necessary and also show or put"
+            "format all replies and bold instead of asterisks wherever necessary and also show or put"
             "headers and use formatted text instead of symbols"
         )
     }
